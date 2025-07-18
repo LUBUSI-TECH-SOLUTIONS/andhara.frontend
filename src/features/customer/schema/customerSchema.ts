@@ -53,7 +53,7 @@ export const customerEschema = z.object({
   medical_diagnosis:
     z.string()
       .min(1, 'El diagnóstico es requerido')
-      .max(100, 'El diagnóstico no puede tener más de 100 caracteres')
+      .max(1000, 'El diagnóstico no puede tener más de 100 caracteres')
       .refine((medical_diagnosis) => medical_diagnosis.length >= 5, {
         message: 'El diagnóstico debe tener al menos 5 caracteres',
       }),

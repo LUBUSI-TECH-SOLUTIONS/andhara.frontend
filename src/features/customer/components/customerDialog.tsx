@@ -50,6 +50,7 @@ export const CustomerDialog = () => {
       document_type: "CC",
       customer_first_name: "",
       customer_last_name: "",
+      medical_diagnosis: "",
       phone_number: "",
       email: "",
       home_address: "",
@@ -67,9 +68,14 @@ export const CustomerDialog = () => {
         customer_last_name: selectedCustomer.customer_last_name,
         phone_number: selectedCustomer.phone_number,
         email: selectedCustomer.email,
+        medical_diagnosis: selectedCustomer.medical_diagnosis,
         home_address: selectedCustomer.home_address,
         customer_state: selectedCustomer.customer_state,
-        id_branch: typeof selectedCustomer.branch === "string" ? selectedCustomer.branch : selectedCustomer.branch?.id_branch ?? undefined
+        id_branch:
+          typeof selectedCustomer.branch ===
+            "string"
+            ? selectedCustomer.branch
+            : selectedCustomer.branch?.id_branch ?? undefined
 
       })
     } else {
@@ -78,6 +84,7 @@ export const CustomerDialog = () => {
         document_type: "",
         customer_first_name: "",
         customer_last_name: "",
+        medical_diagnosis: "",
         phone_number: "",
         email: "",
         home_address: "",
