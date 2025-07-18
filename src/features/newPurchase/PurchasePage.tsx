@@ -23,9 +23,15 @@ import { useNavigate } from "react-router-dom"
 
 
 export const PurchasePage = () => {
-  const { activeTab, setActiveTab, selectedProducts, createPurchase, isLoading } = usePurchaseStore()
-  const { selectedCustomer, clearFilters, fetchCustomerPurchases, customerPurchase } = useCustomerStore()
+  const { activeTab, setActiveTab, selectedProducts, createPurchase, isLoading,  } = usePurchaseStore()
+  const { selectedCustomer, clearFilters, fetchCustomerPurchases, customerPurchase, clearSelectedCustomer } = useCustomerStore()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    return () => {
+      clearSelectedCustomer()
+    }
+  }, [])
 
   const form = useForm<PurchaseFormValue>({
     resolver: zodResolver(purchaseSchema),
