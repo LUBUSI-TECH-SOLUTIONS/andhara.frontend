@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader2, UserPen, UserPlus } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Textarea } from "@/components/ui/textarea"
 
 export const CustomerDialog = () => {
   const {
@@ -96,6 +97,7 @@ export const CustomerDialog = () => {
           customer_last_name: data.customer_last_name,
           phone_number: data.phone_number,
           email: data.email,
+          medical_diagnosis: data.medical_diagnosis,
           home_address: data.home_address,
           customer_state: data.customer_state ?? true,
           id_branch: data.id_branch,
@@ -108,6 +110,7 @@ export const CustomerDialog = () => {
           customer_last_name: data.customer_last_name,
           phone_number: data.phone_number,
           email: data.email,
+          medical_diagnosis: data.medical_diagnosis,
           home_address: data.home_address,
           customer_state: data.customer_state ?? true,
           id_branch: data.id_branch,
@@ -221,6 +224,20 @@ export const CustomerDialog = () => {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="medical_diagnosis"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Diagnostico</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} placeholder="Ingrese el diagnostico del cliente" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
             </div>
             <div className="grid sm:grid-cols-3 gap-4">
               <FormField

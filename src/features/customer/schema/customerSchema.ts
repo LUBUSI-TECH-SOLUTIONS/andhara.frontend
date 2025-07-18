@@ -50,6 +50,13 @@ export const customerEschema = z.object({
       .refine((email) => email.endsWith('.com'), {
         message: 'El correo debe terminar con .com',
       }),
+  medical_diagnosis:
+    z.string()
+      .min(1, 'El diagnóstico es requerido')
+      .max(100, 'El diagnóstico no puede tener más de 100 caracteres')
+      .refine((medical_diagnosis) => medical_diagnosis.length >= 5, {
+        message: 'El diagnóstico debe tener al menos 5 caracteres',
+      }),
   home_address:
     z.string()
       .min(1, 'La dirección es requerida')
