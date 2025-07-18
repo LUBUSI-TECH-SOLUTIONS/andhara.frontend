@@ -9,7 +9,8 @@ export interface CustomerCoreSlice {
   customerPurchase: CustomerPurchase | null;
   isLoading: boolean;
   error: string | null;
-
+  
+  clearSelectedCustomer: () => void;
   setAllCustomers: (customers: Customer[]) => void;
   setFilteredCustomers: (customers: Customer[]) => void;
   setDisplayedCustomers: (customers: Customer[]) => void;
@@ -28,15 +29,16 @@ export const createCoreSlice: StateCreator<
 
   selectedCustomer: null,
   customerPurchase: null,
-
+  
   isLoading: false,
   error: null,
-
+  
   setAllCustomers: (customers) => set({ allCustomers: customers }),
   setFilteredCustomers: (customers) => set({ filteredCustomers: customers }),
   setDisplayedCustomers: (customers) => set({ displayedCustomers: customers }),
   setSelectedCustomer: (customer) => set({ selectedCustomer: customer }),
   setCustomerPurchase: (purchase) => set({ customerPurchase: purchase }),
   setIsLoading: (value) => set({ isLoading: value }),
-  setError: (message) => set({ error: message })
+  setError: (message) => set({ error: message }),
+  clearSelectedCustomer: () => set({ selectedCustomer: null })
 })
