@@ -5,7 +5,8 @@ import { formatCurrency } from "@/lib/format"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { CustomerActions, CustomerDataAction } from "@/features/customer/components/customerActions"
-import { ArrowUpDown} from "lucide-react"
+import { ArrowUpDown, ClipboardCheck, } from "lucide-react"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface ColumnOptions {
   onSort: (field: string) => void
@@ -67,7 +68,7 @@ export const getColumns = ({ onSort, sort, isLoading }: ColumnOptions): ColumnDe
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="text-center">
+        <div className="text-left">
           {row.getValue("customer_first_name")}
         </div>
       ),
@@ -80,9 +81,30 @@ export const getColumns = ({ onSort, sort, isLoading }: ColumnOptions): ColumnDe
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="text-center">
+        <div className="text-left">
           {row.getValue("customer_last_name")}
         </div>
+      ),
+    },
+    {
+      accessorKey: "medical_diagnosis",
+      header: () => (
+        <Button variant="ghost" disabled={isLoading}>
+          Diagnóstico
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost">
+              Diagnostico
+              <ClipboardCheck className="text-primary" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            {row.getValue("medical_diagnosis") || "No registrado"}
+          </PopoverContent>
+        </Popover>
       ),
     },
     {
