@@ -10,6 +10,7 @@ import CustomerPage from '@/features/customer/customerPage.tsx';
 import ProductsPage from '@/features/products/ProductsPage.tsx';
 import { PurchasePage } from '@/features/newPurchase/PurchasePage';
 import RegisterForm from '@/features/auth/components/RegisterForm';
+import { DashboardDetailPage } from '@/features/dashboardDetail/dashboardDetailPage';
 
 
 const router = createBrowserRouter([
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
         children: [
           { path: "/", element: <DashboardPage /> },
           { path: "/dashboard", element: <DashboardPage /> },
+          { path: "/dashboard-detail", element: <DashboardDetailPage /> },
           { path: "/clientes", element: <CustomerPage /> },
           { path: "/productos", element: <ProductsPage /> },
           { path: "/usuarios", element: <RegisterForm /> },

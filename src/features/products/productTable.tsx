@@ -81,7 +81,7 @@ export const ProductTable = () => {
       <section className="space-y-4">
          <Card>
             <CardHeader>
-               <CardTitle className="text-2xl font-semibold uppercase">
+               <CardTitle className="text-2xl font-semibold">
                   Productos
                </CardTitle>
             </CardHeader>
