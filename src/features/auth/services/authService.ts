@@ -12,7 +12,7 @@ export interface LoginResponse{
 export const authService = {
    loginRequest: async (email: string, password: string): Promise<AxiosResponse<LoginResponse>> => {
       try {
-         const response: AxiosResponse<LoginResponse> = await apiClient.post<LoginResponse>("/auth/login", {
+         const response: AxiosResponse<LoginResponse> = await apiClient.post<LoginResponse>("/v1/auth/login", {
             email,
             password
          });
@@ -28,7 +28,7 @@ export const authService = {
 
    logout: async () => {
       try {
-         const response = await apiClient.post("/auth/logout")
+         const response = await apiClient.post("/v1/auth/logout")
          localStorage.removeItem('authToken');
          return response.status
       } catch (error) {

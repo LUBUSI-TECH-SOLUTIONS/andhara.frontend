@@ -4,7 +4,7 @@ import { PurchaseRequest } from "@/features/dashboard/types/purchaseTypes";
 export const purchaseService = {
   createPurchase: async (data: PurchaseRequest) => {
     try {
-      const response = await apiClient.post("/purchase/create", data);
+      const response = await apiClient.post("/v1/purchase/create", data);
       return response.data;
     }catch (error: any) {
       const errorMessage = error.response?.data?.message || "Error al crear la venta"

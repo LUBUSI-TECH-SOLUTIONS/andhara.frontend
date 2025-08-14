@@ -5,7 +5,7 @@ import { CustomerManagement, CustomerService, CustomerServiceById } from "@/feat
 export const customerManagementService = {
 	customerManagementList: async (): Promise<AxiosResponse<CustomerService[]>> => {
 		try {
-			const response: AxiosResponse<CustomerService[]> = await apiClient.get("/customer-service/list-all");
+			const response: AxiosResponse<CustomerService[]> = await apiClient.get("/v1/customer-service/list-all");
 			return response;
 		} catch (error: any) {
 			const errorMessage = error.response?.data?.message || "Error al obtener la lista de clientes"
@@ -15,7 +15,7 @@ export const customerManagementService = {
 
 	customerManagementById: async (id: string): Promise<AxiosResponse<CustomerServiceById>> => {
 		try {
-			const response: AxiosResponse<CustomerServiceById> = await apiClient.get(`/customer-service/get-by-id/${id}`);
+			const response: AxiosResponse<CustomerServiceById> = await apiClient.get(`/v1/customer-service/get-by-id/${id}`);
 			return response;
 		} catch (error: any) {
 			const errorMessage = error.response?.data?.message || "Error al obtener el cliente"
@@ -25,7 +25,7 @@ export const customerManagementService = {
 
 	CustomerManagement: async (data: CustomerManagement): Promise<AxiosResponse> => {
 		try {
-			const response: AxiosResponse = await apiClient.patch(`/customer-service/manage/${data.id_customer_service}`, {
+			const response: AxiosResponse = await apiClient.patch(`/v1/customer-service/manage/${data.id_customer_service}`, {
 				contact_comment: data.contact_comment,
 				customer_service_status: data.customer_service_status,
 			});
