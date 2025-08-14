@@ -12,7 +12,7 @@ export const CustomerService = {
   } = {}): Promise<AxiosResponse<Customer[]>> => {
     try {
       const response: AxiosResponse<Customer[]>
-        = await apiClient.get<Customer[]>("/customer/customers", {
+        = await apiClient.get<Customer[]>("/v1/customer/customers", {
           params: { search, skip, limit },
           headers: new AxiosHeaders(),
         })
@@ -40,7 +40,7 @@ export const CustomerService = {
   ): Promise<AxiosResponse<CustomerPurchase>> => {
     try {
       const response: AxiosResponse<CustomerPurchase>
-        = await apiClient.get<CustomerPurchase>(`/customer/purchases`, {
+        = await apiClient.get<CustomerPurchase>(`/v1/customer/purchases`, {
           params: { document },
           headers: new AxiosHeaders(),
         })
@@ -69,7 +69,7 @@ export const CustomerService = {
   ): Promise<AxiosResponse<Customer>> => {
     try {
       const response: AxiosResponse<Customer>
-        = await apiClient.post<Customer>("/customer/create-customer", client)
+        = await apiClient.post<Customer>("/v1/customer/create-customer", client)
       if (response.status === 201) {
         toast.success("Cliente creado correctamente");
       }
@@ -92,7 +92,7 @@ export const CustomerService = {
     try {
       const response
         : AxiosResponse<Customer>
-        = await apiClient.patch<Customer>(`/customer/update-customer/${clientData.customer_document}`, clientData)
+        = await apiClient.patch<Customer>(`/v1/customer/update-customer/${clientData.customer_document}`, clientData)
       if (response.status === 200) {
         toast.success("Cliente actualizado correctamente");
       }
@@ -115,7 +115,7 @@ export const CustomerService = {
     try {
       const response
         : AxiosResponse<Customer>
-        = await apiClient.patch(`/customer/toggle-customer/${document}`)
+        = await apiClient.patch(`/v1/customer/toggle-customer/${document}`)
       if (response.status === 200) {
         toast.success("Estado del cliente cambiado correctamente");
       }

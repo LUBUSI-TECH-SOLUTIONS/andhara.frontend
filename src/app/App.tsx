@@ -16,7 +16,6 @@ const App = () => {
         position="bottom-right"
       />
       <CustomerDialog />
-
     </>
   );
 };

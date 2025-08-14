@@ -32,6 +32,7 @@ export interface Customer {
   customer_first_name: string;
   customer_last_name: string;
   phone_number: string;
+  medical_diagnosis: string;
   email: string;
   home_address: string;
   customer_state: boolean;
@@ -45,6 +46,7 @@ export interface CustomerRequest{
   customer_first_name: string;
   customer_last_name: string;
   phone_number: string;
+  medical_diagnosis: string;
   email: string;
   home_address: string;
   customer_state: boolean;

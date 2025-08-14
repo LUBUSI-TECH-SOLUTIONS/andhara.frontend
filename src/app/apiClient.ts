@@ -227,4 +227,4 @@ class ApiClient {
     }
 }
 
-export default ApiClient.getInstance(import.meta.env.VITE_API_URL_PROD);
+export default ApiClient.getInstance(import.meta.env.VITE_API_URL_DEV);

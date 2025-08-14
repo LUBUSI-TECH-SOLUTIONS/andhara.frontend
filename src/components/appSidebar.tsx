@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/app/stores/authStore";
 
-import { House, LogOut, Store, Users } from "lucide-react";
+import { House, LogOut, ReceiptText, Store, Users } from "lucide-react";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu } from "@/components/ui/sidebar";
 import NavMain from "@/components/navMain";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,11 @@ const data = [
     title: "Dashboard",
     icon: House,
     url: "/dashboard"
+  },
+  {
+    title: "Detalle",
+    icon: ReceiptText,
+    url: "/dashboard-detail"
   },
   {
     title: "Clientes",

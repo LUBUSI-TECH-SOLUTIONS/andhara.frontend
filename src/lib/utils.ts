@@ -26,11 +26,12 @@ export interface SortOption {
  * @returns {string} - Formatted date string in the format "dd mon yyyy".
  * @throws {Error} - Throws if the string format is invalid.
  */
+export const months = [
+  "ene", "feb", "mar", "abr", "may", "jun",
+  "jul", "ago", "sep", "oct", "nov", "dic"
+];
+
 export const formaterDate = (inputDate?: string | Date): string => {
-  const months = [
-    "ene", "feb", "mar", "abr", "may", "jun",
-    "jul", "ago", "sep", "oct", "nov", "dic"
-  ];
 
   let dateObj: Date;
 
