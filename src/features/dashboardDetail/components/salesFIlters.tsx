@@ -7,15 +7,23 @@ import { useState } from "react"
 import { DateRange } from "react-day-picker"
 import { Button } from "@/components/ui/button"
 import { RotateCcw } from "lucide-react"
+import { incomesStore } from "@/app/stores/dashboard_detail/incomesStore"
 
 export const SaleFilters = () => {
-  const [date, setDate] = useState<DateRange | null>(null)
+  const { setFilters, resetFilters } = incomesStore()
+  const [dateRange, setDateRange] = useState<DateRange | null>(null)
+
+  const handleReset = () => {
+    console.log("Resetting filters")
+    resetFilters()
+    setDateRange(null)
+  }
   return (
     <section className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
         <div className="space-y-2">
           <Label className="text-sm font-medium">Sede</Label>
-          <Select>
+          <Select onValueChange={(value) => setFilters({ id_branch: value })}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Seleccionar sede" />
             </SelectTrigger>
@@ -30,7 +38,7 @@ export const SaleFilters = () => {
         </div>
         <div className="space-y-2">
           <Label className="text-sm font-medium">Año</Label>
-          <Select>
+          <Select onValueChange={(value) => setFilters({ year: value === "all" ? undefined : Number(value) })}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Seleccionar año" />
             </SelectTrigger>
@@ -44,14 +52,14 @@ export const SaleFilters = () => {
         </div>
         <div className="space-y-2">
           <Label className="text-sm font-medium">Mes</Label>
-          <Select>
+          <Select onValueChange={(value) => setFilters({ month: value === ' ' ? undefined : Number(value) })}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Seleccionar mes" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todos los meses</SelectItem>
+              <SelectItem value={' '}>Todos los meses</SelectItem>
               {months.map((month, index) => (
-                <SelectItem key={index} value={month}>
+                <SelectItem key={index} value={(index + 1).toString()}>
                   {month.charAt(0).toUpperCase() + month.slice(1)}
                 </SelectItem>
               ))}
@@ -59,15 +67,24 @@ export const SaleFilters = () => {
           </Select>
         </div>
         <div className="space-y-2">
-          <Label className="text-sm font-medium">Rango de fechas</Label>
+          <Label className="text-sm font-medium">Fecha</Label>
           <DateRangePicker
-            value={date} 
-            onChange={() => setDate(null)} />
+            value={dateRange}
+            onChange={(range: DateRange | null) => {
+              setDateRange(range)
+              if (range && range.from && range.to) {
+                setFilters({
+                  start_date: range.from.toISOString(),
+                  end_date: range.to.toISOString(),
+                })
+              }
+            }} />
         </div>
-         {/* Botón de resetear filtros */}
+        {/* Botón de resetear filtros */}
         <div className="space-y-2 flex flex-col justify-end">
           <Label className="text-sm font-medium">Limpiar</Label>
           <Button
+            onClick={handleReset}
             variant="outline"
             size="default"
             className="gap-2 bg-transparent hover:bg-muted/50 border-muted-foreground/20"
@@ -75,7 +92,7 @@ export const SaleFilters = () => {
             <RotateCcw className="h-4 w-4" />
             Limpiar filtros
           </Button>
-        </div> 
+        </div>
       </div>
     </section>
   )

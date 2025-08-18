@@ -19,7 +19,7 @@ export type SalesReportParams = {
   skip?: number;
   limit?: number;
   id_branch?: string | number;
-  mont?: number;
+  month?: number;
   year?: number;
   start_date?: string;
   end_date?: string;

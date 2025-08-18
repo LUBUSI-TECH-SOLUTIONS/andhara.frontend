@@ -5,10 +5,10 @@ import apiClient from "@/app/apiClient";
 
 export const dashboardDetailService = {
   getIncomes: async ({
-    skip = 0,
-    limit = 7,
+    skip,
+    limit,
     id_branch,
-    mont,
+    month,
     year,
     start_date,
     end_date
@@ -16,7 +16,7 @@ export const dashboardDetailService = {
     try {
       const response: AxiosResponse<SalesReport[]>
         = await apiClient.get<SalesReport[]>("/v2/incomes/incomes-table", {
-          params: { skip, limit, id_branch, mont, year, start_date, end_date },
+          params: { skip, limit, id_branch, month, year, start_date, end_date },
           headers: new AxiosHeaders(),
         })
       if(!response.data || response.data.length === 0) {
