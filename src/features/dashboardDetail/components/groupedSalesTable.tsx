@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { incomesStore } from "@/app/stores/dashboard_detail/incomesStore";
+import { incomesStore } from "@/app/stores/dashboard_detail/dashboardDetailStore";
 import {
   Table,
   TableBody,

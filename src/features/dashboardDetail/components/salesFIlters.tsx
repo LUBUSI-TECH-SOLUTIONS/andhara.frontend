@@ -2,12 +2,12 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { months } from "@/lib/utils"
 import { branchesStatic } from "@/shared/static"
-import { DateRangePicker } from "../utils/dateRangePicker"
+import { DateRangePicker } from "@/features/dashboardDetail/utils/dateRangePicker"
 import { useState } from "react"
 import { DateRange } from "react-day-picker"
 import { Button } from "@/components/ui/button"
 import { RotateCcw } from "lucide-react"
-import { incomesStore } from "@/app/stores/dashboard_detail/incomesStore"
+import { incomesStore } from "@/app/stores/dashboard_detail/dashboardDetailStore"
 
 export const SaleFilters = () => {
   const { setFilters, resetFilters } = incomesStore()

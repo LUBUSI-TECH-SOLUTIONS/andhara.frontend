@@ -1,10 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn, formaterDate } from "@/lib/utils";
-import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
-import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { Calendar } from "@/components/ui/calendar";
 

@@ -24,3 +24,37 @@ export type SalesReportParams = {
   start_date?: string;
   end_date?: string;
 };
+
+// Reports
+
+export interface GlobalResume {
+  total_purchases: {
+    total_purchases: number
+    products_involved: number
+  }
+  customers: {
+    customers_involved: number
+    branches_involved: number
+    total_customers: number
+    total_branches: number
+  }
+  global_financial: {
+    total_revenue: number
+    total_profit: number
+    profit_margin: number
+  }
+}
+
+export interface ProductSummary {
+  rank_position: number
+  product_name: string
+  units_sold: number
+  total_revenue: number
+  total_profit: number
+  profit_margin: number
+}
+
+export interface SalesDashboardResponse {
+  global_resume: GlobalResume
+  products_summary: ProductSummary[]
+}
