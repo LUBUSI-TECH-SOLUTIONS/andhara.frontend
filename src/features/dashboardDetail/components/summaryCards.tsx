@@ -3,6 +3,7 @@ import { incomesStore } from "@/app/stores/dashboard_detail/dashboardDetailStore
 import { formatCurrency } from "@/lib/format"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DollarSign, Target, Users } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 
 export const SummaryCards = () => {
   const { fetchReports, reports } = incomesStore()
@@ -24,10 +25,21 @@ export const SummaryCards = () => {
     },
     {
       title: "Clientes",
-      value: reports?.global_resume.customers.total_customers || 0,
-      subtitle: "Clientes únicos",
+      value: reports?.global_resume.customers.customers_involved || 0,
+      subtitle: `Clientes únicos en ${reports?.global_resume.customers.branches_involved || 0} sucursales`,
+      extra_data: 
+        `${reports?.global_resume.customers.total_customers || 0} clientes registrados`,
       icon: Users,
       color: "text-blue-500",
+    },
+    {
+      title: "Pedidos",
+      value: reports?.global_resume.total_purchases.total_purchases || 0,
+      subtitle: "Pedidos únicos",
+      extra_data: 
+        `${reports?.global_resume.total_purchases.products_involved || 0} productos vendidos`,
+      icon: Users,
+      color: "text-yellow-500",
     }
   ]
 
@@ -36,7 +48,7 @@ export const SummaryCards = () => {
   }, [])
 
   return (
-    <section className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+    <section className="grid grid-cols-1 lg:grid-cols-4 gap-3 truncate">
       {summaryCards.map((card, index) => {
         const Icon = card.icon
         return (
@@ -48,6 +60,9 @@ export const SummaryCards = () => {
             <CardContent>
               <div className="text-lg font-bold">{card.value}</div>
               <p className="text-xs text-muted-foreground">{card.subtitle}</p>
+              {card.extra_data && (
+                <Badge variant="outline">{card.extra_data}</Badge>
+              )}
             </CardContent>
           </Card>
         )
