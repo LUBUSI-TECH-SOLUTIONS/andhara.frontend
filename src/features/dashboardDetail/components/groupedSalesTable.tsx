@@ -14,6 +14,7 @@ import { Loader2, ChevronDown, ChevronRight } from "lucide-react";
 import { formatCurrency } from "@/lib/format";
 import { formaterDate } from "@/lib/utils";
 import React from "react";
+import { ReportsButton } from "./groupedExportButton";
 
 export const GroupedIncomesTable = () => {
   const {
@@ -47,7 +48,7 @@ export const GroupedIncomesTable = () => {
 
     const observer = new IntersectionObserver(handleObserver, {
       root: container,
-      rootMargin: "200px 0px", 
+      rootMargin: "200px 0px",
       threshold: 0,
     });
 
@@ -64,17 +65,19 @@ export const GroupedIncomesTable = () => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground hidden sm:block">
           {incomes.length} registros agrupados por fecha y sede
         </p>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={toggleExpandAll}
-          className="text-sm bg-transparent"
-        >
-          {expandAll ? "Contraer Todo" : "Expandir Todo"}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={toggleExpandAll}
+            className="text-sm bg-transparent"
+          >
+            {expandAll ? "Contraer Todo" : "Expandir Todo"}
+          </Button>
+          <ReportsButton />
+        </div>
       </div>
 
       <div

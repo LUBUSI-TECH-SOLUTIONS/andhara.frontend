@@ -17,18 +17,49 @@ export const reportsService = {
           params: { id_branch, month, year, start_date, end_date },
           headers: new AxiosHeaders(),
         })
-      if(!response.data) {
+      if (!response.data) {
         toast.error("No se encontraron ingresos");
       }
-      if(response.data) {
+      if (response.data) {
         toast.success("Ingresos obtenidos correctamente");
       }
       return response
-    }catch (error: unknown) {
+    } catch (error: unknown) {
       let errorMessage = "Error al obtener los ingresos";
       if (axios.isAxiosError(error)) {
         errorMessage = error.response?.data?.message || errorMessage;
-      }else if (error instanceof Error) {
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      toast.error(errorMessage);
+      throw new Error(errorMessage);
+    }
+  },
+
+  downloadIncomesReport: async (params: SalesReportParams) => {
+    try {
+      const response = await apiClient.get("/v2/incomes/download-report", {
+        params,
+        responseType: "blob",
+        headers: new AxiosHeaders(),
+      });
+      const contentDisposition = response.headers['content-disposition'];
+      let fileName = 'reporte.xlsx'
+
+      if (contentDisposition) {
+        const match = contentDisposition.match(/filename="?([^"]+)"?/);
+        if (match && match[1]) {
+          fileName = match[1];
+        }
+      }
+
+      return { blob: response.data, fileName };
+
+    } catch (error: unknown) {
+      let errorMessage = "Error al descargar el reporte";
+      if (axios.isAxiosError(error)) {
+        errorMessage = error.response?.data?.message || errorMessage;
+      } else if (error instanceof Error) {
         errorMessage = error.message;
       }
       toast.error(errorMessage);

@@ -13,7 +13,7 @@ const App = () => {
       <RouterProvider router={router} />
       <Toaster
         expand={false}
-        position="bottom-right"
+        position="top-center"
       />
       <CustomerDialog />
     </>

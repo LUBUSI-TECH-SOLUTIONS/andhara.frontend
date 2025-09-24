@@ -2,10 +2,12 @@ import { StateCreator } from "zustand";
 import { IncomeCoreSlice } from "./incomeCoreSlice";
 import { dashboardDetailService } from "@/features/dashboardDetail/service/dashboardDetailService";
 import { SalesReport } from "@/features/dashboardDetail/types/incomesTypes";
+import { reportsService } from "@/features/dashboardDetail/service/reportsService";
 
 export interface IncomeActionsSlice {
   fetchIncomes: (opts?: { reset?: boolean }) => Promise<void>;
   fetchNext: () => Promise<void>;
+  downoladReport: () => Promise<void>;
   reset: () => void;
 }
 
@@ -55,6 +57,24 @@ export const createIncomeActionsSlice: StateCreator<
 
   fetchNext: async () => {
     await get().fetchIncomes({ reset: false });
+  },
+
+  downoladReport: async () => {
+    const { filters } = get();
+    try {
+      const { blob, fileName } = await reportsService.downloadIncomesReport(filters);
+      const url = window.URL.createObjectURL(new Blob([blob]));
+      const link = document.createElement('a');
+      link
+        .href = url;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading report:", error);
+    }
   },
 
   reset: () => {
