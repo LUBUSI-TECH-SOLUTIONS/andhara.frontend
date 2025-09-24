@@ -87,3 +87,9 @@ export interface CustomerTableFilters {
   minDuration: number | null;
   maxDuration: number | null;
 }
+
+export interface DiagnosisTypes {
+  id_diagnosis: string;
+  diagnosis_name: string;
+  diagnosis_description: string;
+}

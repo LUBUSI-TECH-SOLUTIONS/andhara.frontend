@@ -14,7 +14,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader2, UserPen, UserPlus } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Textarea } from "@/components/ui/textarea"
 
 export const CustomerDialog = () => {
   const {
@@ -26,11 +25,17 @@ export const CustomerDialog = () => {
     isNewDialogOpen,
     isEditDialogOpen,
     closeEditDialog,
-    closeNewDialog
+    closeNewDialog,
+    fetchDiagnoses,
+    allDiagnoses
   } = useCustomerStore()
 
   const isEditing = !!selectedCustomer
   const isOpen = isEditDialogOpen || isNewDialogOpen
+
+  useEffect(() => {
+    fetchDiagnoses()
+  }, [fetchDiagnoses])
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -237,9 +242,20 @@ export const CustomerDialog = () => {
                 render={({ field }) => (
                   <FormItem className="col-span-2">
                     <FormLabel>Diagnostico</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} placeholder="Ingrese el diagnostico del cliente" />
-                    </FormControl>
+                    <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="w-full" disabled={isLoading}>
+                          <SelectValue placeholder="Seleccione el diagnostico" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {allDiagnoses.map((diagnosis) => (
+                          <SelectItem key={diagnosis.id_diagnosis} value={diagnosis.id_diagnosis}>
+                            {diagnosis.diagnosis_name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
