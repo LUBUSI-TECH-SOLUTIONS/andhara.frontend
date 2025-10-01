@@ -32,9 +32,9 @@ export interface Customer {
   customer_first_name: string;
   customer_last_name: string;
   phone_number: string;
-  medical_diagnosis: string;
   email: string;
   home_address: string;
+  DiagnosisTypes: DiagnosisTypes[] | null;
   customer_state: boolean;
   branch: Branch;
   last_purchase: Purchase | null
@@ -46,7 +46,7 @@ export interface CustomerRequest{
   customer_first_name: string;
   customer_last_name: string;
   phone_number: string;
-  medical_diagnosis: string;
+  customer_diagnosis: DiagnosisTypes[] | null;
   email: string;
   home_address: string;
   customer_state: boolean;
@@ -61,9 +61,10 @@ export interface CustomerByDocument{
   phone_number: string;
   email: string;
   home_address: string;
+  customer_diagnosis: DiagnosisTypes[] | null;
   customer_state: boolean;
-  total_historical_purchases: number | null;
   branch: Branch;
+  total_historical_purchases: number | null;
   purchases: Purchase[];
 }
 
@@ -92,4 +93,5 @@ export interface DiagnosisTypes {
   id_diagnosis: string;
   diagnosis_name: string;
   diagnosis_description: string;
+  id_customer_diagnosis: string;
 }
