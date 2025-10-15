@@ -5,8 +5,7 @@ import { formatCurrency } from "@/lib/format"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { CustomerActions, CustomerDataAction } from "@/features/customer/components/customerActions"
-import { ArrowUpDown, ClipboardCheck, } from "lucide-react"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { ArrowUpDown} from "lucide-react"
 import { CustomerDiagnosis } from "./customerDiagnosis"
 
 interface ColumnOptions {

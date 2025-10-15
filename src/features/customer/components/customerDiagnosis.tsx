@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Row } from "@tanstack/react-table"
-import { ClipboardCheck, FileText, Info } from "lucide-react"
+import { FileText, Info } from "lucide-react"
 import { Customer } from "../types/customerTypes"
 
 interface CustomerDiagnosisProps {

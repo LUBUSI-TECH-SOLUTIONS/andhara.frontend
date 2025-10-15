@@ -34,7 +34,7 @@ export interface Customer {
   phone_number: string;
   email: string;
   home_address: string;
-  DiagnosisTypes: DiagnosisTypes[] | null;
+  customer_diagnosis?: DiagnosisTypes[] | null;
   customer_state: boolean;
   branch: Branch;
   last_purchase: Purchase | null
@@ -46,7 +46,7 @@ export interface CustomerRequest{
   customer_first_name: string;
   customer_last_name: string;
   phone_number: string;
-  customer_diagnosis: DiagnosisTypes[] | null;
+  customer_diagnosis?: DiagnosisTypes[] | null;
   email: string;
   home_address: string;
   customer_state: boolean;

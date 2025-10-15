@@ -55,7 +55,7 @@ export const CustomerDialog = () => {
       document_type: "CC",
       customer_first_name: "",
       customer_last_name: "",
-      medical_diagnosis: "",
+      customer_diagnosis: [],
       phone_number: "",
       email: "",
       home_address: "",
@@ -73,7 +73,7 @@ export const CustomerDialog = () => {
         customer_last_name: selectedCustomer.customer_last_name,
         phone_number: selectedCustomer.phone_number,
         email: selectedCustomer.email,
-        medical_diagnosis: selectedCustomer.medical_diagnosis,
+        customer_diagnosis: selectedCustomer.customer_diagnosis ?? [],
         home_address: selectedCustomer.home_address,
         customer_state: selectedCustomer.customer_state,
         id_branch:
@@ -89,7 +89,7 @@ export const CustomerDialog = () => {
         document_type: "",
         customer_first_name: "",
         customer_last_name: "",
-        medical_diagnosis: "",
+        customer_diagnosis: [],
         phone_number: "",
         email: "",
         home_address: "",
@@ -109,7 +109,7 @@ export const CustomerDialog = () => {
           customer_last_name: data.customer_last_name,
           phone_number: data.phone_number,
           email: data.email,
-          medical_diagnosis: data.medical_diagnosis,
+          customer_diagnosis: data.customer_diagnosis,
           home_address: data.home_address,
           customer_state: data.customer_state ?? true,
           id_branch: data.id_branch,
@@ -122,7 +122,7 @@ export const CustomerDialog = () => {
           customer_last_name: data.customer_last_name,
           phone_number: data.phone_number,
           email: data.email,
-          medical_diagnosis: data.medical_diagnosis,
+          customer_diagnosis: data.customer_diagnosis,
           home_address: data.home_address,
           customer_state: data.customer_state ?? true,
           id_branch: data.id_branch,
@@ -163,24 +163,6 @@ export const CustomerDialog = () => {
             <div className="grid sm:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="customer_document"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Documento</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        disabled={isEditing || isLoading}
-                        placeholder="Ingrese el documento"
-                        value={field.value}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="document_type"
                 render={({ field }) => (
                   <FormItem>
@@ -204,6 +186,24 @@ export const CustomerDialog = () => {
                         ))}
                       </SelectContent>
                     </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="customer_document"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Documento</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isEditing || isLoading}
+                        placeholder="Ingrese el documento"
+                        value={field.value}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -238,7 +238,7 @@ export const CustomerDialog = () => {
               />
               <FormField
                 control={form.control}
-                name="medical_diagnosis"
+                name="customer_diagnosis"
                 render={({ field }) => (
                   <FormItem className="col-span-2">
                     <FormLabel>Diagnostico</FormLabel>
