@@ -9,7 +9,7 @@ export const DashboardDetailPage = () => {
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl font-semibold ">
-            Detalles del Dashboard
+            Detalles de ventas
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
