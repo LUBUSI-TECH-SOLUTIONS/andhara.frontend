@@ -16,7 +16,8 @@ interface ColumnOptions {
   isLoading: boolean
 }
 
-export const getColumns = ({ onSort, sort, isLoading }: ColumnOptions): ColumnDef<Product>[] => {
+export const getColumns = ({ onSort, sort, isLoading }:
+   ColumnOptions): ColumnDef<Product>[] => {
   const handleSort = (field: string) => {
     if (isLoading) return
     onSort(field)

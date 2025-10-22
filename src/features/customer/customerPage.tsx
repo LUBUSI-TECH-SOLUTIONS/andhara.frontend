@@ -1,4 +1,4 @@
-import { CostumerTable } from "@/features/customer/customerTable";
+import { CostumerTable } from "@/features/customer/components/customerTable";
 import { CustomersFilters } from "@/features/customer/components/custumerFilters";
 import { ProductTableToolbar } from "@/features/customer/components/customerTableToolbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

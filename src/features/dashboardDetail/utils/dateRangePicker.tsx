@@ -1,10 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { CalendarIcon } from "lucide-react";
+import { cn, formaterDate } from "@/lib/utils";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
-import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { Calendar } from "@/components/ui/calendar";
 
@@ -22,11 +20,10 @@ export const DateRangePicker = ({ value, onChange }: DateRangePickerProps) => {
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className={cn("w-full justify-start text-left font-normal", !value && "text-muted-foreground")}>
-          <CalendarIcon className="mr-2 h-4 w-4" />
+          className={cn("w-full justify-start text-left font-normal truncate", !value && "text-muted-foreground")}>
           {value?.from ? (
             <>
-              {format(value.from, "dd/MM/yyyy", { locale: es })} - {value.to ? format(value.to, "dd/MM/yyyy", { locale: es }) : ""}
+              {formaterDate(value.from)} - {value.to ? formaterDate(value.to) : "Hasta hoy"}
             </>
           ) : (
             <span>Seleccionar rango</span>

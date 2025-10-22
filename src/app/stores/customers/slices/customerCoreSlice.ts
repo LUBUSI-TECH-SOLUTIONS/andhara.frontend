@@ -1,8 +1,9 @@
-import { Customer, CustomerPurchase } from "@/features/customer/types/customerTypes";
+import { Customer, CustomerPurchase, DiagnosisTypes } from "@/features/customer/types/customerTypes";
 import { StateCreator } from "zustand";
 
 export interface CustomerCoreSlice {
   allCustomers: Customer[];
+  allDiagnoses: DiagnosisTypes[];
   filteredCustomers: Customer[];
   displayedCustomers: Customer[];
   selectedCustomer: Customer | null;
@@ -18,12 +19,15 @@ export interface CustomerCoreSlice {
   setCustomerPurchase: (purchase: CustomerPurchase | null) => void;
   setIsLoading: (isLoading: boolean) => void;
   setError: (error: string | null) => void;
+
+  setDiagnosis: (diagnosis: DiagnosisTypes[]) => void;
 }
 
 export const createCoreSlice: StateCreator<
   CustomerCoreSlice, [], [], CustomerCoreSlice
 > = (set) => ({
   allCustomers: [],
+  allDiagnoses: [],
   filteredCustomers: [],
   displayedCustomers: [],
 
@@ -40,5 +44,7 @@ export const createCoreSlice: StateCreator<
   setCustomerPurchase: (purchase) => set({ customerPurchase: purchase }),
   setIsLoading: (value) => set({ isLoading: value }),
   setError: (message) => set({ error: message }),
-  clearSelectedCustomer: () => set({ selectedCustomer: null })
+  clearSelectedCustomer: () => set({ selectedCustomer: null }),
+
+  setDiagnosis: (diagnosis) => set({ allDiagnoses: diagnosis }),
 })

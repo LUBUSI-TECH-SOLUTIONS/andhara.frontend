@@ -20,6 +20,8 @@ export interface CustomerActionsSlice {
   createCustomer: (data: CustomerRequest) => Promise<void>;
   updateCustomer: (data: CustomerRequest) => Promise<void>;
   toggleCustomerStatus: (document: string) => Promise<void>;
+  
+  fetchDiagnoses: () => Promise<void>;
 }
 
 export const createActionsSlice: StateCreator<
@@ -170,4 +172,17 @@ export const createActionsSlice: StateCreator<
     }
   },
 
+  fetchDiagnoses: async () => {
+    const { setIsLoading, setError, setDiagnosis } = get();
+    try {
+      setIsLoading(true);
+      const response = await CustomerService.getCustomerDiagnostics();
+      setDiagnosis(response.data || []);
+    } catch (error: any) {
+      setError(error.message || "Failed to fetch diagnoses");
+    }
+    finally {
+      setIsLoading(false);
+    }
+  }
 })

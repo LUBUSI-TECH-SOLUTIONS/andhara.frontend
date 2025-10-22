@@ -1,5 +1,5 @@
 import apiClient from "@/app/apiClient";
-import { Customer, CustomerPurchase, CustomerRequest } from "@/features/customer/types/customerTypes";
+import { Customer, CustomerPurchase, CustomerRequest, DiagnosisTypes } from "@/features/customer/types/customerTypes";
 import axios, { AxiosHeaders } from "axios";
 import { AxiosResponse } from "axios";
 import { toast } from "sonner";
@@ -131,5 +131,32 @@ export const CustomerService = {
       throw new Error(errorMessage);
     }
   },
+
+
+  // Diagnostics
+  getCustomerDiagnostics: async ()
+    : Promise<AxiosResponse<DiagnosisTypes[]>> => {
+    try {
+      const response: AxiosResponse<DiagnosisTypes[]>
+        = await apiClient.get<DiagnosisTypes[]>("/v2/diagnoses/list-all")
+
+      if (!response.data || response.data.length === 0) {
+        toast.error("No se encontraron tipos de diagnóstico");
+      }
+      if (response.data.length > 0) {
+        toast.success("Tipos de diagnóstico obtenidos correctamente");
+      }
+      return response
+    } catch (error: unknown) {
+      let errorMessage = "Error al obtener los tipos de diagnóstico";
+      if (axios.isAxiosError(error)) {
+        errorMessage = error.response?.data?.message || errorMessage;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      toast.error(errorMessage);
+      throw new Error(errorMessage);
+    }
+  }
 }
 

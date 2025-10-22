@@ -2,7 +2,7 @@ export const notifications = {
   "data": [
     {
       "id": 1,
-      "title": "New message from John",
+      "title": "New message from John test two",
       "message": "Hey, how are you?",
       "timestamp": "2023-10-01T12:00:00Z"
     },

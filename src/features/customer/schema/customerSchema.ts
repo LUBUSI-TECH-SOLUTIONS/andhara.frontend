@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { branchesStatic } from '@/shared/static'
-import { typesDocument } from '@/shared/static'; 
-
+import { typesDocument } from '@/shared/static';
 
 export const customerEschema = z.object({
   customer_document:
@@ -50,13 +49,9 @@ export const customerEschema = z.object({
       .refine((email) => email.endsWith('.com'), {
         message: 'El correo debe terminar con .com',
       }),
-  medical_diagnosis:
-    z.string()
-      .min(1, 'El diagnóstico es requerido')
-      .max(1000, 'El diagnóstico no puede tener más de 100 caracteres')
-      .refine((medical_diagnosis) => medical_diagnosis.length >= 5, {
-        message: 'El diagnóstico debe tener al menos 5 caracteres',
-      }),
+  customer_diagnosis: z.array(z.string()).min(1,{
+    message: 'Al menos un diagnóstico es requerido',
+  }),
   home_address:
     z.string()
       .min(1, 'La dirección es requerida')
