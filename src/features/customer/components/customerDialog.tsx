@@ -163,7 +163,7 @@ export const CustomerDialog = () => {
         </DialogHeader>
         {
           error && (
-            <Alert variant={"destructive"}>
+            <Alert variant="destructive">
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )
