@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Loader2, UserPen, UserPlus } from "lucide-react"
+import { Loader2, Plus, UserPen, UserPlus } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
@@ -64,6 +64,19 @@ export const CustomerDialog = () => {
     }
   })
 
+  const diagnosis = form.watch("customer_diagnosis")
+
+  const addDiagnosis = () => {
+    const currentDiagnosis = form.getValues("customer_diagnosis") || []
+    form.setValue("customer_diagnosis", [...currentDiagnosis, ""])
+  }
+
+  const removeDiagnosis = (index: number) => {
+    const currentDiagnosis = form.getValues("customer_diagnosis") || []
+    currentDiagnosis.splice(index, 1)
+    form.setValue("customer_diagnosis", currentDiagnosis)
+  }
+
   useEffect(() => {
     if (selectedCustomer) {
       form.reset({
@@ -73,7 +86,7 @@ export const CustomerDialog = () => {
         customer_last_name: selectedCustomer.customer_last_name,
         phone_number: selectedCustomer.phone_number,
         email: selectedCustomer.email,
-        customer_diagnosis: selectedCustomer.customer_diagnosis ?? [],
+        customer_diagnosis: selectedCustomer.customer_diagnosis?.map(d => String(d.id_diagnosis)) ?? [],
         home_address: selectedCustomer.home_address,
         customer_state: selectedCustomer.customer_state,
         id_branch:
@@ -236,31 +249,59 @@ export const CustomerDialog = () => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="customer_diagnosis"
-                render={({ field }) => (
-                  <FormItem className="col-span-2">
-                    <FormLabel>Diagnostico</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="w-full" disabled={isLoading}>
-                          <SelectValue placeholder="Seleccione el diagnostico" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {allDiagnoses.map((diagnosis) => (
-                          <SelectItem key={diagnosis.id_diagnosis} value={diagnosis.id_diagnosis}>
-                            {diagnosis.diagnosis_name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
+              <div className="p-4 w-full border rounded-lg col-span-2 bg-neutral-50 space-y-4">
+                {
+                  diagnosis.map((_dig, index) => (
+                    <div key={index} className="mt-2 flex items-end gap-2">
+                      <FormField
+                        control={form.control}
+                        name={`customer_diagnosis.${index}`}
+                        render={({ field }) => (
+                          <FormItem className="flex-1">
+                            <FormLabel>Diagnostico {index + 1}</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="w-full" disabled={isLoading}>
+                                  <SelectValue placeholder="Seleccione el diagnostico" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {allDiagnoses.map((diagnosis) => (
+                                  <SelectItem key={diagnosis.id_diagnosis} value={diagnosis.id_diagnosis}>
+                                    {diagnosis.diagnosis_name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeDiagnosis(index)}
+                        disabled={isLoading}
+                      >
+                        <Plus className="rotate-45 h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))
+                }
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => addDiagnosis()}
+                  disabled={isLoading}
+                  type="button"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Agregar Diagnóstico
+                </Button>
+              </div>
             </div>
             <div className="grid sm:grid-cols-3 gap-4">
               <FormField

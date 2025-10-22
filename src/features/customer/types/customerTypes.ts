@@ -46,7 +46,7 @@ export interface CustomerRequest{
   customer_first_name: string;
   customer_last_name: string;
   phone_number: string;
-  customer_diagnosis?: DiagnosisTypes[] | null;
+  customer_diagnosis?: DiagnosisTypes[] | string[] | null | undefined;
   email: string;
   home_address: string;
   customer_state: boolean;
