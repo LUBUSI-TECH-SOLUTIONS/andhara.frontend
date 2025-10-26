@@ -95,54 +95,15 @@ export const ProductService = {
    * @param id - The ID of the product.
    * @throws Error if the request fails.
    */
-  inactivateProduct: async (id: string): Promise<void> => {
+  toggleProductState: async (product: Product): Promise<void> => {
     try {
-      await apiClient.patch(`/v1/product/inactivate/${id}`)
+      const newState = !product.product_state;
+      await apiClient.patch(
+        `/v1/product/toggle-product/${product.id_product}?activate=${newState}`
+      );
     } catch (error) {
-      console.error(`Error inactivating product with ID ${id}:`, error)
-      throw new Error(`Error inactivating product with ID ${id}`)
-    }
-  },
-
-  /**
-   * Sets a product's state to active.
-   * @param id - The ID of the product.
-   * @throws Error if the request fails.
-   */
-  activateProduct: async (id: string): Promise<void> => {
-    try {
-      await apiClient.patch(`/v1/product/activate/${id}`)
-    } catch (error) {
-      console.error(`Error activating product with ID ${id}:`, error)
-      throw new Error(`Error activating product with ID ${id}`)
-    }
-  },
-
-  /**
-   * Toggles the active/inactive state of a product.
-   * @param id - The ID of the product.
-   * @param currentState - The current state of the product.
-   * @returns A promise that resolves to the updated product.
-   * @throws Error if the toggle or subsequent fetch fails.
-   */
-  toggleProductState: async (id: string, currentState?: boolean): Promise<Product> => {
-    try {
-      if (currentState) {
-        await ProductService.inactivateProduct(id)
-      } else {
-        await ProductService.activateProduct(id)
-      }
-
-      const updatedProduct = await ProductService.getProduct(id)
-
-      if (!updatedProduct) {
-        throw new Error(`Product with ID ${id} not found after toggle`)
-      }
-
-      return updatedProduct
-    } catch (error) {
-      console.error(`Error toggling state for product with ID ${id}:`, error)
-      throw error
+      console.error(`Error inactivating product with ID ${product.id_product}:`, error)
+      throw new Error(`Error inactivating product with ID ${product.id_product}`)
     }
   },
 

@@ -30,8 +30,7 @@ interface ProductState {
   fetchProducts: () => Promise<void>
   createProduct: (product: Omit<Product, "id_product">) => Promise<void>
   updateProduct: (product: Product) => Promise<void>
-  inactivateProduct: (id: string) => Promise<void>
-  toggleProductState: (id: string) => Promise<void>
+  toggleProduct: (product: Product) => Promise<void>
   getSupplierName: (supplierId: string) => string
 
   setFilters: (filters: Partial<ProductTableFilters>) => void
@@ -146,44 +145,15 @@ export const useProductStore = create<ProductState>((set, get) => ({
     }
   },
 
-  inactivateProduct: async (id) => {
+  toggleProduct: async (product) => {
     set({ isLoading: true, error: null })
     try {
-      await ProductService.inactivateProduct(id)
-
+      await ProductService.toggleProductState(product)
       await get().fetchProducts()
-
       get().closeDeleteDialog()
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : "Error al inactivar producto",
-        isLoading: false,
-      })
-    }
-  },
-
-  toggleProductState: async (id) => {
-    set({ isLoading: true, error: null })
-    try {
-      const product = get().allProducts.find((p) => p.id_product === id)
-
-      if (!product) {
-        throw new Error(`Producto con ID ${id} no encontrado`)
-      }
-
-      const updatedProduct = await ProductService.toggleProductState(id, product.product_state)
-
-      set((state) => ({
-        allProducts: state.allProducts.map((p) => (p.id_product === updatedProduct.id_product ? updatedProduct : p)),
-        isLoading: false,
-      }))
-
-      await get().fetchProducts()
-
-      get().applyFilters()
-    } catch (error) {
-      set({
-        error: error instanceof Error ? error.message : "Error al cambiar estado del producto",
         isLoading: false,
       })
     }
