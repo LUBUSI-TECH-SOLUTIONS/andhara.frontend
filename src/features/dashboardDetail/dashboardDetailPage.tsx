@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { SaleFilters } from "@/features/dashboardDetail/components/salesFIlters"
 import { GroupedIncomesTable } from "@/features/dashboardDetail/components/groupedSalesTable"
 import { SummaryCards } from "@/features/dashboardDetail/components/summaryCards"
-import { ProductSummaryHorizontal } from "./components/productSummaryHorizontal"
+import { ProductSummaryHorizontal } from "@/features/dashboardDetail/components/productsSummaryHorizontal"
 
 export const DashboardDetailPage = () => {
   return (
@@ -19,9 +19,7 @@ export const DashboardDetailPage = () => {
           <ProductSummaryHorizontal />
           <GroupedIncomesTable />
         </CardContent>
-
       </Card>
-
     </section>
   )
 }

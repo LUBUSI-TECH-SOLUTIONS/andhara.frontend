@@ -13,13 +13,7 @@ import {
 import { Loader2 } from "lucide-react"
 
 export function DeleteAlert() {
-  const { inactivateProduct, isLoading, deleteDialogOpen, closeDeleteDialog, productIdToDelete } = useProductStore()
-
-  const handleDelete = async () => {
-    if (productIdToDelete !== null) {
-      await inactivateProduct(productIdToDelete)
-    }
-  }
+  const { isLoading, deleteDialogOpen, closeDeleteDialog} = useProductStore()
 
   return (
     <AlertDialog open={deleteDialogOpen} onOpenChange={closeDeleteDialog}>
@@ -32,7 +26,7 @@ export function DeleteAlert() {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isLoading}>Cancelar</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700" disabled={isLoading}>
+          <AlertDialogAction className="bg-red-600 hover:bg-red-700" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Inactivar
           </AlertDialogAction>

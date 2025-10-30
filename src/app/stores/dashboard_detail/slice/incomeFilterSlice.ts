@@ -53,5 +53,6 @@ export const createIncomeFilterSlice: StateCreator<
       totalRecords: 0,
     }))
     await get().fetchIncomes({ reset: true });
+    await get().fetchReports();
   }
 })

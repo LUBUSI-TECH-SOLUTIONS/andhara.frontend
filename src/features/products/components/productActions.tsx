@@ -4,7 +4,7 @@ import type { Product } from "@/features/products/types/productTypes"
 
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Edit, MoreHorizontal, Power, Trash } from "lucide-react"
+import { Edit, MoreHorizontal, Power} from "lucide-react"
 
 interface ProductActionsProps {
   row: Row<Product>
@@ -12,7 +12,7 @@ interface ProductActionsProps {
 
 export const ProductActions = ({ row }: ProductActionsProps) => {
   const product = row.original
-  const { openEditDialog, openDeleteDialog, toggleProductState } = useProductStore()
+  const { openEditDialog, toggleProduct } = useProductStore()
 
   return (
     <DropdownMenu>
@@ -28,14 +28,9 @@ export const ProductActions = ({ row }: ProductActionsProps) => {
           Editar
         </DropdownMenuItem>
         <DropdownMenuItem 
-          disabled={product.product_state ? false : true}
-          onClick={() => toggleProductState(product.id_product!)}>
+          onClick={() => toggleProduct(product)}>
           <Power className="mr-2 h-4 w-4" />
           {product.product_state ? "Desactivar" : "Activar"}
-        </DropdownMenuItem>
-        <DropdownMenuItem disabled onClick={() => openDeleteDialog(product.id_product!)} className="text-red-600">
-          <Trash className="mr-2 h-4 w-4" />
-          Eliminar
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -53,7 +53,6 @@ export const createFilterSlice: StateCreator<
 
   setSearch: (value) => set({ search: value }),
   setFilters: (newFilter) => {
-    console.log("Setting filters:", newFilter);
     const { filters, applyFilters } = get();
     const updatedFilters = { ...filters, ...newFilter };
 

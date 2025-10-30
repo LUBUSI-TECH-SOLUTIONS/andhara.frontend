@@ -63,7 +63,6 @@ export const CustomersFilters = () => {
                 setFilters({ branch: null })
               } else {
                 const selectedBranch = branchesStatic.find(branch => branch.branch_name === value);
-                console.log("Branch",filters, "branch", selectedBranch)
                 setFilters({ branch: selectedBranch ?? null })
               }
             }}

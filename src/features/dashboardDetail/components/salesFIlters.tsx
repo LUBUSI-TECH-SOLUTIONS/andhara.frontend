@@ -14,7 +14,6 @@ export const SaleFilters = () => {
   const [dateRange, setDateRange] = useState<DateRange | null>(null)
 
   const handleReset = () => {
-    console.log("Resetting filters")
     resetFilters()
     setDateRange(null)
   }
