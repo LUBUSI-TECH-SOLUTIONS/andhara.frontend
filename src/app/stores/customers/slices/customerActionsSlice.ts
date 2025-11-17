@@ -19,7 +19,7 @@ export interface CustomerActionsSlice {
   fetchCustomerPurchases: (document: string) => Promise<void>;
   createCustomer: (data: CustomerRequest) => Promise<void>;
   updateCustomer: (data: CustomerRequest) => Promise<void>;
-  toggleCustomerStatus: (document: string) => Promise<void>;
+  toggleCustomerStatus: (document: string, status: boolean) => Promise<void>;
   
   fetchDiagnoses: () => Promise<void>;
 }
@@ -151,7 +151,7 @@ export const createActionsSlice: StateCreator<
     }
   },
 
-  toggleCustomerStatus: async (document) => {
+  toggleCustomerStatus: async (document, status) => {
     const {
       fetchCustomers,
       setError,
@@ -161,7 +161,7 @@ export const createActionsSlice: StateCreator<
 
     try {
       setIsLoading(true);
-      await CustomerService.toggleCustomer(document);
+      await CustomerService.toggleCustomer(document, status);
       setError(null);
     } catch (error: any) {
       setError(error.message || "Failed to toggle customer status");

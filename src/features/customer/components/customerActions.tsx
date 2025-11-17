@@ -20,9 +20,10 @@ export const CustomerActions = ({row}: CustomerActionsProps) => {
     setSelectedCustomer 
   } = useCustomerStore()
   const navigate = useNavigate()
+  const newStatus = !customer.customer_state;
   const handleToggleCustomerState = async (document: string) => {
     try {
-      await toggleCustomerStatus(document)
+      await toggleCustomerStatus(document, newStatus)
       toast.success(`Cliente ${customer.customer_state ? "desactivado" : "activado"} correctamente`)
     }catch (error) {
       console.error("Error toggling customer state:", error)
