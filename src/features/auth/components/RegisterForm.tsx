@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
 const RegisterForm = () => {
-  const { register, getUsers, error, isLoading } = useRegisterStore()
+  const { register, getUsers, isLoading } = useRegisterStore()
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,25 +36,16 @@ const RegisterForm = () => {
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof registerSchema>) => {
+  const onSubmit = (values: z.infer<typeof registerSchema>) => {
     const finalValues = {
       email: values.email,
       password: values.password,
       role: values.role,
     }
     try {
-      await register(finalValues.email, finalValues.password, finalValues.role)
+      register(finalValues.email, finalValues.password, finalValues.role)
       form.reset()
-      toast.success(
-        `El usuario ${values.email} se registro correctamente`, {
-      }
-      )
-      if (error) {
-        toast.error(
-          error, {
-        }
-        )
-      }
+      toast.success(`El usuario ${values.email} se registro correctamente`)
     } catch (error) {
       console.error("Register failed:", error);
       toast.error(
@@ -96,7 +87,7 @@ const RegisterForm = () => {
                   <FormItem>
                     <FormLabel>Correo</FormLabel>
                     <FormControl >
-                      <Input placeholder="Correo" {...field} />
+                      <Input disabled={isLoading} placeholder="Correo" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -109,7 +100,7 @@ const RegisterForm = () => {
                   <FormItem>
                     <FormLabel>Contraseña</FormLabel>
                     <FormControl >
-                      <Input type="password" placeholder="Contraseña" {...field} />
+                      <Input disabled={isLoading} type="password" placeholder="Contraseña" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -122,7 +113,7 @@ const RegisterForm = () => {
                   <FormItem>
                     <FormLabel>Confirmar contraseña</FormLabel>
                     <FormControl >
-                      <Input type="password" placeholder="Confirmar contraseña" {...field} />
+                      <Input disabled={isLoading} type="password" placeholder="Confirmar contraseña" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -136,7 +127,7 @@ const RegisterForm = () => {
                     <FormLabel>Rol</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger disabled={isLoading} className="w-full">
                           <SelectValue placeholder="Selecciona un rol" />
                         </SelectTrigger>
                       </FormControl>

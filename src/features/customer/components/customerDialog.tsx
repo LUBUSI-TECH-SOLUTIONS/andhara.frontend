@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader2, Plus, UserPen, UserPlus } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 export const CustomerDialog = () => {
   const {
@@ -168,33 +169,203 @@ export const CustomerDialog = () => {
             </Alert>
           )
         }
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4"
-          >
-            <div className="grid sm:grid-cols-2 gap-4">
+        <ScrollArea className="h-[400px] md:h-[600px] w-full rounded-md border p-4">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4"
+            >
+              <div className="grid sm:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="document_type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Tipo de documento</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        value={field.value}
+                        disabled={isEditing || isLoading}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full" disabled={isLoading}>
+                            <SelectValue placeholder="Seleccione el tipo de documento" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {typesDocument.map((branch) => (
+                            <SelectItem key={branch.id} value={branch.id}>
+                              {branch.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="customer_document"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Documento</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          disabled={isEditing || isLoading}
+                          placeholder="Ingrese el documento"
+                          value={field.value}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="customer_first_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nombre</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Ingrese el nombre" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="customer_last_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Apellido</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Ingrese el apellido" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="p-4 w-full border rounded-lg col-span-2 bg-neutral-50 space-y-4">
+                  {
+                    diagnosis.map((_dig, index) => (
+                      <div key={index} className="mt-2 flex items-end gap-2">
+                        <FormField
+                          control={form.control}
+                          name={`customer_diagnosis.${index}`}
+                          render={({ field }) => (
+                            <FormItem className="flex-1">
+                              <FormLabel>Diagnostico {index + 1}</FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                value={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger className="w-full" disabled={isLoading}>
+                                    <SelectValue placeholder="Seleccione el diagnostico" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {allDiagnoses.map((diagnosis) => (
+                                    <SelectItem key={diagnosis.id_diagnosis} value={diagnosis.id_diagnosis}>
+                                      {diagnosis.diagnosis_name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeDiagnosis(index)}
+                          disabled={isLoading}
+                        >
+                          <Plus className="rotate-45 h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))
+                  }
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => addDiagnosis()}
+                    disabled={isLoading}
+                    type="button"
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Agregar Diagnóstico
+                  </Button>
+                </div>
+              </div>
+              <div className="grid sm:grid-cols-3 gap-4">
+                <FormField
+                  control={form.control}
+                  name="phone_number"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Teléfono</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Ingrese el teléfono" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Correo electrónico</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Ingrese el correo electrónico" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="home_address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Dirección</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Ingrese la dirección" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormField
                 control={form.control}
-                name="document_type"
+                name="id_branch"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Tipo de documento</FormLabel>
+                  <FormItem className="col-span-2">
+                    <FormLabel>Sucursal</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                       value={field.value}
-                      disabled={isEditing || isLoading}
                     >
                       <FormControl>
                         <SelectTrigger className="w-full" disabled={isLoading}>
-                          <SelectValue placeholder="Seleccione el tipo de documento" />
+                          <SelectValue placeholder="Seleccione la sucursal" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {typesDocument.map((branch) => (
-                          <SelectItem key={branch.id} value={branch.id}>
-                            {branch.name}
+                        {branchesStatic.map((branch) => (
+                          <SelectItem key={branch.id_branch} value={branch.id_branch}>
+                            {branch.branch_name}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -205,207 +376,39 @@ export const CustomerDialog = () => {
               />
               <FormField
                 control={form.control}
-                name="customer_document"
+                name="customer_state"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Documento</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        disabled={isEditing || isLoading}
-                        placeholder="Ingrese el documento"
-                        value={field.value}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="customer_first_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nombre</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Ingrese el nombre" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="customer_last_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Apellido</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Ingrese el apellido" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="p-4 w-full border rounded-lg col-span-2 bg-neutral-50 space-y-4">
-                {
-                  diagnosis.map((_dig, index) => (
-                    <div key={index} className="mt-2 flex items-end gap-2">
-                      <FormField
-                        control={form.control}
-                        name={`customer_diagnosis.${index}`}
-                        render={({ field }) => (
-                          <FormItem className="flex-1">
-                            <FormLabel>Diagnostico {index + 1}</FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              value={field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger className="w-full" disabled={isLoading}>
-                                  <SelectValue placeholder="Seleccione el diagnostico" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {allDiagnoses.map((diagnosis) => (
-                                  <SelectItem key={diagnosis.id_diagnosis} value={diagnosis.id_diagnosis}>
-                                    {diagnosis.diagnosis_name}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => removeDiagnosis(index)}
-                        disabled={isLoading}
-                      >
-                        <Plus className="rotate-45 h-4 w-4" />
-                      </Button>
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                    <div className="space-y-0.5">
+                      <FormLabel>Estado</FormLabel>
+                      <FormDescription>
+                        {field.value
+                          ? "El cliente está activo"
+                          : "El cliente está inactivo"}
+                      </FormDescription>
                     </div>
-                  ))
-                }
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => addDiagnosis()}
-                  disabled={isLoading}
-                  type="button"
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Agregar Diagnóstico
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        disabled={isLoading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <DialogFooter>
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Guardar cambios
                 </Button>
-              </div>
-            </div>
-            <div className="grid sm:grid-cols-3 gap-4">
-              <FormField
-                control={form.control}
-                name="phone_number"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Teléfono</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Ingrese el teléfono" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Correo electrónico</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Ingrese el correo electrónico" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="home_address"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Dirección</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Ingrese la dirección" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <FormField
-              control={form.control}
-              name="id_branch"
-              render={({ field }) => (
-                <FormItem className="col-span-2">
-                  <FormLabel>Sucursal</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    value={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="w-full" disabled={isLoading}>
-                        <SelectValue placeholder="Seleccione la sucursal" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {branchesStatic.map((branch) => (
-                        <SelectItem key={branch.id_branch} value={branch.id_branch}>
-                          {branch.branch_name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="customer_state"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                  <div className="space-y-0.5">
-                    <FormLabel>Estado</FormLabel>
-                    <FormDescription>
-                      {field.value
-                        ? "El cliente está activo"
-                        : "El cliente está inactivo"}
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      disabled={isLoading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <DialogFooter>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                Guardar cambios
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+              </DialogFooter>
+            </form>
+          </Form>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   )

@@ -37,7 +37,7 @@ export const PurchaseFormDetails = () => {
               <Input
                 id="customer_name"
                 type="text"
-                placeholder="Número de documento"
+                placeholder="Nombre del Cliente"
                 disabled
                 value={selectedCustomer?.customer_first_name}
               />
@@ -50,7 +50,10 @@ export const PurchaseFormDetails = () => {
                   <FormLabel>Duración de Compra (días)</FormLabel>
                   <FormControl>
                     <Input
+                      min={0}
+                      step={1}
                       type="number"
+                      onKeyDown={(e) => e.key !== '-'}
                       placeholder="Tiempo que durará la compra"
                       {...field}
                     />
@@ -106,7 +109,10 @@ export const PurchaseFormDetails = () => {
                   <FormLabel>Costo de Entrega</FormLabel>
                   <FormControl>
                     <Input
+                      min={0}
+                      step={1}
                       type="number"
+                      onKeyDown={(e) => e.key !== '-'}
                       placeholder="Opcional"
                       {...field}
                     />
@@ -204,7 +210,10 @@ export const PurchaseFormDetails = () => {
                   <FormLabel>Saldo Restante</FormLabel>
                   <FormControl>
                     <Input
+                      min={0}
+                      step={1}
                       type="number"
+                      onKeyDown={(e) => e.key !== '-'}
                       placeholder="Opcional"
                       {...field}
                     />

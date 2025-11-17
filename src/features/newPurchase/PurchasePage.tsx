@@ -55,7 +55,7 @@ export const PurchasePage = () => {
     }
   }, [selectedCustomer])
 
-  const onSubmit = async (data: PurchaseFormValue) => {
+  const onSubmit = (data: PurchaseFormValue) => {
     try {
       const finalData: PurchaseRequest = {
         customer_document: selectedCustomer?.customer_document || "",
@@ -69,10 +69,11 @@ export const PurchasePage = () => {
         delivery_cost: Number(data.delivery_cost),
         products: selectedProducts,
       }
-      await createPurchase(finalData)
+      createPurchase(finalData)
       toast.success("Venta creada con éxito")
       clearFilters()
       form.reset()
+      navigate(-1)
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Error al crear la venta"
       toast.error(errorMessage || "Error al crear la venta")
@@ -132,7 +133,7 @@ export const PurchasePage = () => {
           </Tabs>
           {selectedCustomer ? (
             <div className="col-span-1 mx-2 border-dashed border-primary/30">
-              <ScrollArea className="h-[calc(100vh)]">
+              <ScrollArea className="h-[600px] border p-4 rounded-md">
                 <div className="space-y-6">
                   {customerPurchase?.purchases.map((purchase) => (
                     <Card key={purchase.id_purchase}>

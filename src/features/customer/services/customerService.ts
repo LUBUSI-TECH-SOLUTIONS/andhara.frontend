@@ -110,12 +110,13 @@ export const CustomerService = {
   },
 
   toggleCustomer: async (
-    document: string
+    document: string,
+    status: boolean
   ): Promise<AxiosResponse<Customer>> => {
     try {
       const response
         : AxiosResponse<Customer>
-        = await apiClient.patch(`/v1/customer/toggle-customer/${document}`)
+        = await apiClient.patch(`/v1/customer/toggle-customer/${document}?activate=${status}`)
       if (response.status === 200) {
         toast.success("Estado del cliente cambiado correctamente");
       }
@@ -139,13 +140,6 @@ export const CustomerService = {
     try {
       const response: AxiosResponse<DiagnosisTypes[]>
         = await apiClient.get<DiagnosisTypes[]>("/v2/diagnoses/list-all")
-
-      if (!response.data || response.data.length === 0) {
-        toast.error("No se encontraron tipos de diagnóstico");
-      }
-      if (response.data.length > 0) {
-        toast.success("Tipos de diagnóstico obtenidos correctamente");
-      }
       return response
     } catch (error: unknown) {
       let errorMessage = "Error al obtener los tipos de diagnóstico";
