@@ -55,7 +55,7 @@ export const PurchasePage = () => {
     }
   }, [selectedCustomer])
 
-  const onSubmit = (data: PurchaseFormValue) => {
+  const onSubmit = async (data: PurchaseFormValue) => {
     try {
       const finalData: PurchaseRequest = {
         customer_document: selectedCustomer?.customer_document || "",
@@ -69,11 +69,12 @@ export const PurchasePage = () => {
         delivery_cost: Number(data.delivery_cost),
         products: selectedProducts,
       }
-      createPurchase(finalData)
-      toast.success("Venta creada con éxito")
+      await createPurchase(finalData)
+      
       clearFilters()
       form.reset()
       navigate(-1)
+      toast.success("Venta creada exitosamente")
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Error al crear la venta"
       toast.error(errorMessage || "Error al crear la venta")
@@ -99,7 +100,7 @@ export const PurchasePage = () => {
           </div>
           <CardDescription>Crear una nueva venta con detalles de cliente y productos</CardDescription>
         </CardHeader>
-        <CardContent className="grid grid-cols-3">
+        <CardContent className="flex flex-col gap-y-4   ">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full col-span-2">
             <TabsList className="grid w-full grid-cols-3 mb-4">
               <TabsTrigger value="details">Detalle</TabsTrigger>
