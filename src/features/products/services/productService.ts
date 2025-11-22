@@ -33,13 +33,8 @@ export const ProductService = {
    * @throws Error if the request fails.
    */
   getProducts: async (): Promise<Product[]> => {
-    try {
-      const response = await apiClient.get<Product[]>("/v1/product/products")
-      return response.data
-    } catch (error) {
-      console.error("Error fetching products:", error)
-      throw new Error("Error fetching products")
-    }
+    const response = await apiClient.get<Product[]>("/v1/product/products")
+    return response.data
   },
 
   /**
@@ -49,13 +44,8 @@ export const ProductService = {
    * @throws Error if the request fails.
    */
   getProduct: async (id: string): Promise<Product | null> => {
-    try {
-      const response = await apiClient.get<Product>(`/v1/product/by-id/${id}`)
-      return response.data
-    } catch (error) {
-      console.error(`Error fetching product with ID ${id}:`, error)
-      throw new Error(`Error fetching product with ID ${id}`)
-    }
+    const response = await apiClient.get<Product>(`/v1/product/by-id/${id}`)
+    return response.data
   },
 
   /**
@@ -65,13 +55,8 @@ export const ProductService = {
    * @throws Error if the request fails.
    */
   createProduct: async (product: Omit<Product, "id_product">): Promise<Product> => {
-    try {
-      const response = await apiClient.post<Product>("/v1/product/create-product", product)
-      return response.data
-    } catch (error) {
-      console.error("Error creating product:", error)
-      throw new Error("Error creating product")
-    }
+    const response = await apiClient.post<Product>("/v1/product/create-product", product)
+    return response.data
   },
 
   /**
@@ -81,13 +66,8 @@ export const ProductService = {
    * @throws Error if the request fails.
    */
   updateProduct: async (product: Product): Promise<Product> => {
-    try {
-      const response = await apiClient.put<Product>(`/v1/product/update-product/${product.id_product}`, product)
-      return response.data
-    } catch (error) {
-      console.error(`Error updating product with ID ${product.id_product}:`, error)
-      throw new Error(`Error updating product with ID ${product.id_product}`)
-    }
+    const response = await apiClient.put<Product>(`/v1/product/update-product/${product.id_product}`, product)
+    return response.data
   },
 
   /**
@@ -96,15 +76,10 @@ export const ProductService = {
    * @throws Error if the request fails.
    */
   toggleProductState: async (product: Product): Promise<void> => {
-    try {
-      const newState = !product.product_state;
-      await apiClient.patch(
-        `/v1/product/toggle-product/${product.id_product}?activate=${newState}`
-      );
-    } catch (error) {
-      console.error(`Error inactivating product with ID ${product.id_product}:`, error)
-      throw new Error(`Error inactivating product with ID ${product.id_product}`)
-    }
+    const newState = !product.product_state;
+    await apiClient.patch(
+      `/v1/product/toggle-product/${product.id_product}?activate=${newState}`
+    );
   },
 
   /**

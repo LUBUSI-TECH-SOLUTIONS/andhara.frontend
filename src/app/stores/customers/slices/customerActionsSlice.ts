@@ -5,6 +5,7 @@ import { CustomerFiltersSlice } from "./customerFIltersSlice";
 import { CustomerPaginationSlice } from "./customerPaginationSlice";
 import { CustomerDialogSlice } from "./customerDialogSlice";
 import { CustomerService } from "@/features/customer/services/customerService";
+import { toast } from "sonner";
 
 export interface CustomerActionsSlice {
   fetchCustomers: (
@@ -20,7 +21,7 @@ export interface CustomerActionsSlice {
   createCustomer: (data: CustomerRequest) => Promise<void>;
   updateCustomer: (data: CustomerRequest) => Promise<void>;
   toggleCustomerStatus: (document: string, status: boolean) => Promise<void>;
-  
+
   fetchDiagnoses: () => Promise<void>;
 }
 
@@ -33,7 +34,7 @@ export const createActionsSlice: StateCreator<
   [],
   [],
   CustomerActionsSlice
-> = (_ , get) => ({
+> = (_, get) => ({
   fetchCustomers: async (params) => {
     const {
       setIsLoading,
@@ -60,8 +61,14 @@ export const createActionsSlice: StateCreator<
       applyFilters();
       applyPagination();
       setTotal(data.data.length);
+      if (data.data.length > 0) {
+        // Optional: toast.success("Clientes obtenidos correctamente"); 
+        // Usually we don't toast on fetch success unless it's a manual refresh
+      }
     } catch (error: any) {
-      setError(error.message || "Failed to fetch customers");
+      const message = error.message || "Failed to fetch customers";
+      setError(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -85,7 +92,9 @@ export const createActionsSlice: StateCreator<
       }
       setError(null);
     } catch (error: any) {
-      setError(error.message || "Failed to fetch customer");
+      const message = error.message || "Failed to fetch customer";
+      setError(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -96,10 +105,15 @@ export const createActionsSlice: StateCreator<
     setIsLoading(true);
 
     try {
-      const response = await CustomerService.getCustomerPurchase(document);  
+      const response = await CustomerService.getCustomerPurchase(document);
       setCustomerPurchase(response.data);
+      if (response.data) {
+        toast.success("Compras del cliente obtenidas correctamente");
+      }
     } catch (error: any) {
-      setError(error.message || "Failed to fetch customer purchases");
+      const message = error.message || "Failed to fetch customer purchases";
+      setError(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -119,8 +133,11 @@ export const createActionsSlice: StateCreator<
       await CustomerService.createCostumer(data);
       setError(null);
       closeNewDialog();
+      toast.success("Cliente creado correctamente");
     } catch (error: any) {
-      setError(error.message || "Failed to create customer");
+      const message = error.message || "Failed to create customer";
+      setError(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
       applyFilters();
@@ -142,8 +159,11 @@ export const createActionsSlice: StateCreator<
       await CustomerService.updateCustomer(data);
       setError(null);
       closeEditDialog();
+      toast.success("Cliente actualizado correctamente");
     } catch (error: any) {
-      setError(error.message || "Failed to update customer");
+      const message = error.message || "Failed to update customer";
+      setError(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
       applyFilters();
@@ -163,8 +183,11 @@ export const createActionsSlice: StateCreator<
       setIsLoading(true);
       await CustomerService.toggleCustomer(document, status);
       setError(null);
+      toast.success("Estado del cliente cambiado correctamente");
     } catch (error: any) {
-      setError(error.message || "Failed to toggle customer status");
+      const message = error.message || "Failed to toggle customer status";
+      setError(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
       applyFilters();
@@ -179,7 +202,9 @@ export const createActionsSlice: StateCreator<
       const response = await CustomerService.getCustomerDiagnostics();
       setDiagnosis(response.data || []);
     } catch (error: any) {
-      setError(error.message || "Failed to fetch diagnoses");
+      const message = error.message || "Failed to fetch diagnoses";
+      setError(message);
+      toast.error(message);
     }
     finally {
       setIsLoading(false);

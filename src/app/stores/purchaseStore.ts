@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { purchaseService } from "@/features/dashboard/service/purchaseService";
 import { ProductSelected, PurchaseRequest } from "@/features/dashboard/types/purchaseTypes";
 import { customerManagementStore } from "./customerManagementStore";
+import { toast } from "sonner";
 
 interface saleSate {
   isOpen: boolean;
@@ -32,9 +33,11 @@ export const usePurchaseStore = create<saleSate>((set) => ({
       const response = await purchaseService.createPurchase(data);
       // Después de crear la venta exitosamente, actualizar la lista de customer management
       await customerManagementStore.getState().fetchCustomerManagementList();
+      toast.success("Venta creada correctamente");
       return response;
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || "Error al crear la venta";
+      const errorMessage = error.message || "Error al crear la venta";
+      toast.error(errorMessage);
       throw new Error(errorMessage);
     } finally {
       set({ isLoading: false });

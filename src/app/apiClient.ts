@@ -3,12 +3,14 @@ import axios, {
    AxiosResponse,
    AxiosError,
    AxiosHeaders,
-   InternalAxiosRequestConfig
+   InternalAxiosRequestConfig,
+   CreateAxiosDefaults,
+   Cancel
 } from "axios";
 
 export type HttpMethod = "get" | "post" | "put" | "delete" | "patch";
 
-export interface ApiRequestConfig extends InternalAxiosRequestConfig  {
+export interface ApiRequestConfig extends InternalAxiosRequestConfig {
    abortController?: AbortController;
    isPublic?: boolean;
    headers: AxiosHeaders;
@@ -22,13 +24,34 @@ export interface ApiResponse<T = any> {
    config: ApiRequestConfig;
 }
 
-export interface ApiError<T = any> {
+export interface ApiErrorData {
    message: string;
-   status?: number;
    code?: string;
-   data?: T;
-   isCancelled?: boolean;
-   originalError?: AxiosError | Error;
+   [key: string]: any;
+}
+
+export class ApiError extends Error {
+   public status?: number;
+   public code?: string;
+   public data?: any;
+   public isCancelled?: boolean;
+   public originalError?: AxiosError | Error | Cancel;
+
+   constructor(message: string, options?: {
+      status?: number;
+      code?: string;
+      data?: any;
+      isCancelled?: boolean;
+      originalError?: AxiosError | Error | Cancel;
+   }) {
+      super(message);
+      this.name = "ApiError";
+      this.status = options?.status;
+      this.code = options?.code;
+      this.data = options?.data;
+      this.isCancelled = options?.isCancelled;
+      this.originalError = options?.originalError;
+   }
 }
 
 class ApiClient {
@@ -37,25 +60,25 @@ class ApiClient {
    private pendingRequests: Map<string, AbortController>;
 
    private constructor(baseURL: string) {
-      this.axiosInstance = axios.create({
+      const config: CreateAxiosDefaults = {
          baseURL,
-         timeout: 90000,
+         timeout: 30000, // Reduced timeout for better UX
          headers: {
             "Content-Type": "application/json",
             Accept: "application/json"
          },
-      });
-
+      };
+      this.axiosInstance = axios.create(config);
       this.pendingRequests = new Map();
       this.setupInterceptors();
    }
 
    public static getInstance(baseURL?: string): ApiClient {
       if (!ApiClient.instance) {
-         if (!baseURL)
-            throw new Error(
-               "Base URL is required for the first instance of ApiClient."
-            );
+         if (!baseURL) {
+            // Fallback or throw, but better to handle gracefully if possible, or ensure env var is checked before call
+            throw new Error("Base URL is required for the first instance of ApiClient.");
+         }
          ApiClient.instance = new ApiClient(baseURL);
       }
       return ApiClient.instance;
@@ -66,23 +89,36 @@ class ApiClient {
          (config) => {
             const updatedConfig = config as ApiRequestConfig;
 
-            if(!updatedConfig.isPublic){
+            // Handle Authorization
+            if (!updatedConfig.isPublic) {
                const token = localStorage.getItem("authToken");
                if (token) {
-                  updatedConfig.headers.set("Authorization", `Bearer ${token}`);
+                  if (!updatedConfig.headers) {
+                     updatedConfig.headers = new AxiosHeaders();
+                  }
+                  // Ensure headers is an AxiosHeaders instance or compatible object
+                  if (updatedConfig.headers instanceof AxiosHeaders) {
+                     updatedConfig.headers.set("Authorization", `Bearer ${token}`);
+                  } else {
+                     // Fallback for plain objects (though type definition says AxiosHeaders)
+                     (updatedConfig.headers as any)["Authorization"] = `Bearer ${token}`;
+                  }
                }
             }
 
-            // Abortcontroller
+            // Handle Cancellation
             const requestId = this.generateRequestId(updatedConfig);
-            if (this.pendingRequests.has(requestId)) {
-               this.cancelRequest(requestId);
-            }
+            // Cancel previous request if it's a duplicate (optional strategy, depends on use case)
+            // For now, we just track it. If we wanted to debounce/throttle, we'd do it here.
+            // But strictly cancelling duplicates might be aggressive for some apps.
+            // Let's just ensure we have a controller for manual cancellation.
 
-            const abortController = new AbortController();
-            updatedConfig.signal = abortController.signal;
-            updatedConfig.abortController = abortController;
-            this.pendingRequests.set(requestId, abortController);
+            if (!updatedConfig.signal) {
+               const abortController = new AbortController();
+               updatedConfig.signal = abortController.signal;
+               updatedConfig.abortController = abortController;
+               this.pendingRequests.set(requestId, abortController);
+            }
 
             return updatedConfig;
          },
@@ -91,117 +127,86 @@ class ApiClient {
 
       this.axiosInstance.interceptors.response.use(
          (response) => {
-            this.pendingRequests.delete(
-               this.generateRequestId(response.config as ApiRequestConfig)
-            );
-            return this.normalizeResponse(response);
+            const requestId = this.generateRequestId(response.config as ApiRequestConfig);
+            this.pendingRequests.delete(requestId);
+            return response; // Return raw axios response, we normalize in request method
          },
          (error: AxiosError) => {
             if (error.config) {
-               this.pendingRequests.delete(
-                  this.generateRequestId(error.config as ApiRequestConfig)
-               );
+               const requestId = this.generateRequestId(error.config as ApiRequestConfig);
+               this.pendingRequests.delete(requestId);
             }
             return Promise.reject(this.normalizeError(error));
          }
       );
    }
-   // Helper Methods
+
    private generateRequestId(config: ApiRequestConfig): string {
-      return `${config.method?.toUpperCase()}_${config.url}_${JSON.stringify(config.params || {})}_${JSON.stringify(config.data || {})}`;
+      return `${config.method?.toUpperCase()}_${config.url}_${JSON.stringify(config.params || {})}`;
    }
-  
-     private normalizeResponse<T>(response: AxiosResponse<T>): ApiResponse<T> {
+
+   private normalizeResponse<T>(response: AxiosResponse<T>): ApiResponse<T> {
       return {
-            data: response.data,
-            status: response.status,
-            statusText: response.statusText,
-            headers: response.headers as AxiosHeaders,
-            config: response.config as ApiRequestConfig
-        };
-     }
-  
-     private normalizeError(error: any): ApiError {
-      if(axios.isCancel(error)){
-        return {
-            message: "Request cancelled",
-            isCancelled: true,
-            originalError: error as Error,
-        }
+         data: response.data,
+         status: response.status,
+         statusText: response.statusText,
+         headers: response.headers as AxiosHeaders,
+         config: response.config as ApiRequestConfig
+      };
+   }
+
+   private normalizeError(error: any): ApiError {
+      if (axios.isCancel(error)) {
+         return new ApiError("Request cancelled", { isCancelled: true, originalError: error });
       }
-      if(axios.isAxiosError(error)){
-        return {
-            message: error.message,
+
+      if (axios.isAxiosError(error)) {
+         const data = error.response?.data as ApiErrorData;
+         const message = data?.message || error.message || "An unknown error occurred";
+
+         return new ApiError(message, {
             status: error.response?.status,
             code: error.code,
-            data: error.response?.data,
-            originalError: error as AxiosError,
-        }
+            data: data,
+            originalError: error
+         });
       }
-  
-      return {
-            message: error.message || "An unknown error occurred",
-            originalError: error as Error,
-        };
-     }
 
-   //HTTP Methods
+      return new ApiError(error.message || "An unknown error occurred", { originalError: error });
+   }
 
-   public async request<T = any>(
-      config: ApiRequestConfig
-   ): Promise<ApiResponse<T>> {
+   public async request<T = any>(config: ApiRequestConfig): Promise<ApiResponse<T>> {
       try {
          const response = await this.axiosInstance.request<T>(config);
          return this.normalizeResponse(response);
       } catch (error) {
-         throw this.normalizeError(error);
+         throw error; // Error is already normalized by interceptor
       }
    }
 
-   public async get<T = any>(
-      url: string,
-      config?: ApiRequestConfig
-   ): Promise<ApiResponse<T>> {
-      return this.request({ ...config, url, method: "get", headers: config?.headers || new AxiosHeaders() });
+   public async get<T = any>(url: string, config?: Omit<ApiRequestConfig, 'headers'> & { headers?: any }): Promise<ApiResponse<T>> {
+      return this.request({ ...config, url, method: "get", headers: new AxiosHeaders(config?.headers) });
    }
 
-   public async post<T = any>(
-      url: string,
-      data?: any,
-      config?: ApiRequestConfig
-   ): Promise<ApiResponse<T>> {
-      return this.request({ ...config, url, method: "post", data, headers: config?.headers || new AxiosHeaders() });
+   public async post<T = any>(url: string, data?: any, config?: Omit<ApiRequestConfig, 'headers'> & { headers?: any }): Promise<ApiResponse<T>> {
+      return this.request({ ...config, url, method: "post", data, headers: new AxiosHeaders(config?.headers) });
    }
 
-   public async put<T = any>(
-      url: string,
-      data?: any,
-      config?: ApiRequestConfig
-   ): Promise<ApiResponse<T>> {
-      return this.request({ ...config, url, method: "put", data, headers: config?.headers || new AxiosHeaders() });
+   public async put<T = any>(url: string, data?: any, config?: Omit<ApiRequestConfig, 'headers'> & { headers?: any }): Promise<ApiResponse<T>> {
+      return this.request({ ...config, url, method: "put", data, headers: new AxiosHeaders(config?.headers) });
    }
 
-   public async patch<T = any>(
-      url: string,
-      data?: any,
-      config?: ApiRequestConfig
-   ): Promise<ApiResponse<T>> {
-      return this.request({ ...config, url, method: "patch", data, headers: config?.headers || new AxiosHeaders() });
+   public async patch<T = any>(url: string, data?: any, config?: Omit<ApiRequestConfig, 'headers'> & { headers?: any }): Promise<ApiResponse<T>> {
+      return this.request({ ...config, url, method: "patch", data, headers: new AxiosHeaders(config?.headers) });
    }
 
-   public async delete<T = any>(
-      url: string,
-      config?: ApiRequestConfig
-   ): Promise<ApiResponse<T>> {
-      return this.request({ ...config, url, method: "delete", headers: config?.headers || new AxiosHeaders() });
+   public async delete<T = any>(url: string, config?: Omit<ApiRequestConfig, 'headers'> & { headers?: any }): Promise<ApiResponse<T>> {
+      return this.request({ ...config, url, method: "delete", headers: new AxiosHeaders(config?.headers) });
    }
 
-   // Request Management
    public cancelAllRequests(): void {
-      this.pendingRequests.forEach((controller, requestId) => {
-         controller.abort();
-         this.pendingRequests.delete(requestId);
-      });
+      this.pendingRequests.forEach((controller) => controller.abort());
+      this.pendingRequests.clear();
    }
 
    public cancelRequest(requestId: string): void {
@@ -210,21 +215,7 @@ class ApiClient {
          controller.abort();
          this.pendingRequests.delete(requestId);
       }
-   }   
-
-   //Config Methods
-
-   protected setBaseURL(baseURL: string): void {
-    this.axiosInstance.defaults.baseURL = baseURL;
    }
-
-   public setHeader(key: string, value: string): void {
-      this.axiosInstance.defaults.headers.common[key] = value;
-   }
-
-    public removeHeader(key: string): void {
-        delete this.axiosInstance.defaults.headers.common[key];
-    }
 }
 
 export default ApiClient.getInstance(import.meta.env.VITE_API_URL_PROD);

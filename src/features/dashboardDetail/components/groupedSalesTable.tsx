@@ -64,15 +64,15 @@ export const GroupedIncomesTable = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <p className="text-sm text-muted-foreground hidden sm:block">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <p className="text-sm text-muted-foreground">
           {incomes.length} registros agrupados por fecha y sede
         </p>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <Button
             variant="outline"
             onClick={toggleExpandAll}
-            className="text-sm bg-transparent"
+            className="text-sm bg-transparent flex-1 sm:flex-none"
           >
             {expandAll ? "Contraer Todo" : "Expandir Todo"}
           </Button>
@@ -82,20 +82,10 @@ export const GroupedIncomesTable = () => {
 
       <div
         ref={scrollRef}
-        className="w-full h-[70vh] overflow-y-auto border rounded-lg bg-background"
+        className="w-full h-[70vh] overflow-y-auto border rounded-lg bg-background relative"
       >
         <Table className="min-w-full">
-          <TableHeader
-            className="sticky top-0 z-50"
-            style={{
-              position: "sticky",
-              top: 0,
-              zIndex: 50,
-              backgroundColor: "hsl(var(--background))",
-              borderBottom: "2px solid hsl(var(--border))",
-              boxShadow: "0 2px 4px -1px rgba(0,0,0,0.1)",
-            }}
-          >
+          <TableHeader className="sticky top-0 z-50 bg-background border-b shadow-sm">
             <TableRow>
               <TableHead className="w-12" />
               <TableHead>Fecha</TableHead>
@@ -109,13 +99,13 @@ export const GroupedIncomesTable = () => {
 
           <TableBody>
             {incomes.map((income, index) => {
-              const rowKey = `${income.date}|${income.location}|${index}`; // 👈 keys estables
+              const rowKey = `${income.date}|${income.location}|${index}`;
               const isExpanded = expandedRows?.has(rowKey);
 
               return (
                 <React.Fragment key={rowKey}>
                   <TableRow
-                    className="cursor-pointer hover:bg-muted/50"
+                    className="cursor-pointer hover:bg-muted/50 transition-colors"
                     onClick={() => toggleRow(rowKey)}
                   >
                     <TableCell className="py-3 w-12">
@@ -123,6 +113,7 @@ export const GroupedIncomesTable = () => {
                         variant="ghost"
                         size="sm"
                         className="h-6 w-6 p-0 hover:bg-muted"
+                        aria-label={isExpanded ? "Contraer fila" : "Expandir fila"}
                       >
                         {isExpanded ? (
                           <ChevronDown className="h-4 w-4" />
@@ -131,42 +122,44 @@ export const GroupedIncomesTable = () => {
                         )}
                       </Button>
                     </TableCell>
-                    <TableCell>{formaterDate(income.date)}</TableCell>
+                    <TableCell className="font-medium">{formaterDate(income.date)}</TableCell>
                     <TableCell>
-                      <Badge variant="outline">
+                      <Badge variant="secondary" className="font-normal">
                         {income.location.replace("Sede ", "")}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">{income.products_sold}</TableCell>
                     <TableCell className="text-right">{income.total_quantity}</TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right font-medium text-green-600 dark:text-green-400">
                       {formatCurrency(income.total_profit)}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right font-medium">
                       {formatCurrency(income.total_net)}
                     </TableCell>
                   </TableRow>
 
                   {isExpanded && (
                     <>
-                      <TableRow className="bg-muted/20">
+                      <TableRow className="bg-muted/30 hover:bg-muted/30">
                         <TableCell />
-                        <TableCell colSpan={6}>
+                        <TableCell colSpan={6} className="text-sm text-muted-foreground py-2">
                           Productos vendidos el {formaterDate(income.date)} en {income.location}:
                         </TableCell>
                       </TableRow>
 
                       {income.products.map((p, pi) => (
-                        <TableRow key={`${rowKey}::${pi}`} className="bg-muted/10">
+                        <TableRow key={`${rowKey}::${pi}`} className="bg-muted/10 hover:bg-muted/20 border-b-0">
                           <TableCell />
-                          <TableCell className="pl-8">
-                            <span className="text-muted-foreground mr-2">●</span>
-                            {p.name}
+                          <TableCell className="pl-8 font-medium">
+                            <div className="flex items-center gap-2">
+                              <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/40" />
+                              {p.name}
+                            </div>
                           </TableCell>
                           <TableCell />
                           <TableCell />
                           <TableCell className="text-right">{p.units_sold}</TableCell>
-                          <TableCell className="text-right">{formatCurrency(p.profit)}</TableCell>
+                          <TableCell className="text-right text-green-600/90 dark:text-green-400/90">{formatCurrency(p.profit)}</TableCell>
                           <TableCell className="text-right">{formatCurrency(p.net)}</TableCell>
                         </TableRow>
                       ))}
@@ -183,16 +176,16 @@ export const GroupedIncomesTable = () => {
           className="py-4 min-h-[1px] flex items-center justify-center"
         >
           {isLoading && (
-            <div className="flex items-center gap-2 text-muted-foreground">
+            <div className="flex items-center gap-2 text-muted-foreground animate-pulse">
               <Loader2 className="h-4 w-4 animate-spin" />
-              <span className="text-sm">Cargando más datos…</span>
+              <span className="text-sm">Cargando más datos...</span>
             </div>
           )}
         </div>
 
         {!hasMore && incomes.length > 0 && (
-          <div className="text-center py-4 text-sm text-muted-foreground">
-            No hay más registros
+          <div className="text-center py-8 text-sm text-muted-foreground border-t">
+            No hay más registros para mostrar
           </div>
         )}
       </div>

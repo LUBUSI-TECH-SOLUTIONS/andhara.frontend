@@ -1,14 +1,8 @@
-import apiClient from "@/app/apiClient";
+import apiClient, { ApiResponse } from "@/app/apiClient";
 import { PurchaseRequest } from "@/features/dashboard/types/purchaseTypes";
 
 export const purchaseService = {
-  createPurchase: async (data: PurchaseRequest) => {
-    try {
-      const response = await apiClient.post("/v1/purchase/create", data);
-      return response.data;
-    }catch (error: any) {
-      const errorMessage = error.response?.data?.message || "Error al crear la venta"
-      throw new Error(errorMessage)
-    }
+  createPurchase: async (data: PurchaseRequest): Promise<ApiResponse> => {
+    return await apiClient.post("/v1/purchase/create", data);
   }
 }
