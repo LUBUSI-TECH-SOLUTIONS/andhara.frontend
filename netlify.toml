@@ -1,10 +1,7 @@
 [build]
-  command = "npm install --include=optional && bun run build"
+  command = "bun install && bun run build"
   publish = "dist"
 
 [build.environment]
   NODE_VERSION = "22"
   BUN_VERSION = "1.2.5"
-
-[[plugins]]
-  package = "netlify-plugin-bun"
