@@ -1,7 +1,7 @@
 import apiClient from "@/app/apiClient";
-import { AxiosError, AxiosResponse } from "axios";
+import { ApiResponse } from "@/app/apiClient";
 
-export interface LoginResponse{
+export interface LoginResponse {
    token: string;
    user: {
       email: string;
@@ -10,30 +10,17 @@ export interface LoginResponse{
 };
 
 export const authService = {
-   loginRequest: async (email: string, password: string): Promise<AxiosResponse<LoginResponse>> => {
-      try {
-         const response: AxiosResponse<LoginResponse> = await apiClient.post<LoginResponse>("/v1/auth/login", {
-            email,
-            password
-         });
-         localStorage.setItem("authToken", response.data.token);
-         return response;
-      } catch (error) {
-         const axiosError = error as AxiosError<{ detail?: string }>;
-         const errorMessage =
-           axiosError.response?.data?.detail || "Error al iniciar sesión";
-         throw new Error(errorMessage);
-      }
+   loginRequest: async (email: string, password: string): Promise<ApiResponse<LoginResponse>> => {
+      return await apiClient.post<LoginResponse>("/v1/auth/login", {
+         email,
+         password
+      });
    },
 
    logout: async () => {
-      try {
-         const response = await apiClient.post("/v1/auth/logout")
-         localStorage.removeItem('authToken');
-         return response.status
-      } catch (error) {
-         console.error("Logout failed:", error);
-      }
+      const response = await apiClient.post("/v1/auth/logout");
+      localStorage.removeItem('authToken');
+      return response.status;
    }
 }
 

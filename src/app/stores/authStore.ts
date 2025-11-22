@@ -38,6 +38,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const { token, user } = response.data
       const decodedToken: { exp: number, [key: string]: any } = jwtDecode(token)
       const expiryTime = decodedToken.exp * 1000
+
+      localStorage.setItem('authToken', token);
+
       set({
         user: user,
         token: token,
@@ -59,16 +62,22 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       return false
     }
   },
-  
-  logout: async () => {
-    const response = await authService.logout()
-    localStorage.removeItem('authToken');
-    if(response === 204){
-      set({ token: null, isAuthenticated: false, expiryTime: null, lastActive: Date.now() }); //Resetea el lastActive
-    }
 
-    await get().initalize()
+  logout: async () => {
+    try {
+      const response = await authService.logout();
+      if (response === 204) {
+        set({ token: null, isAuthenticated: false, expiryTime: null, lastActive: Date.now() });
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      localStorage.removeItem('authToken');
+      set({ token: null, isAuthenticated: false, expiryTime: null, lastActive: Date.now() });
+      await get().initalize();
+    }
   },
+
   initalize: () => {
     const token = localStorage.getItem('authToken');
     if (token) {
