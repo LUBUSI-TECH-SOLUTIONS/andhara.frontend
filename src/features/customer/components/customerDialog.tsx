@@ -169,7 +169,7 @@ export const CustomerDialog = () => {
             </Alert>
           )
         }
-        <ScrollArea className="h-[400px] md:h-[600px] w-full rounded-md border p-4">
+        <ScrollArea className="h-[300px] w-full rounded-md border p-4">
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
