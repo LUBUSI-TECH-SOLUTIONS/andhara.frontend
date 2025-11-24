@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Loader2, Plus, UserPen, UserPlus } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 export const CustomerDialog = () => {
@@ -21,7 +20,6 @@ export const CustomerDialog = () => {
     createCustomer,
     updateCustomer,
     isLoading,
-    error,
     selectedCustomer,
     isNewDialogOpen,
     isEditDialogOpen,
@@ -162,13 +160,6 @@ export const CustomerDialog = () => {
           </DialogDescription>
           <Separator className="my-2" />
         </DialogHeader>
-        {
-          error && (
-            <Alert variant="destructive">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )
-        }
         <ScrollArea className="h-[300px] w-full rounded-md border p-4">
           <Form {...form}>
             <form
