@@ -12,7 +12,7 @@ import { SelectedProdcutsCard } from "@/features/newPurchase/components/selected
 export const PurchaseFormProducts = () => {
   const { selectedCustomer } = useCustomerStore()
   const { fetchProducts, allProducts, isLoading } = useProductStore()
-  const { addOrUpdateProduct, removeUnitFromProduct, selectedProducts, closeModal, setActiveTab} = usePurchaseStore()
+  const { addOrUpdateProduct, removeUnitFromProduct, selectedProducts, closeModal, setActiveTab } = usePurchaseStore()
 
   const handleNext = () => {
     setActiveTab("summary")
@@ -75,7 +75,7 @@ export const PurchaseFormProducts = () => {
                             getStockByBranch(product) > 5 ? "default" : "destructive"
                           } >{getStockByBranch(product)}</Badge>
                         ) : (
-                          <Badge className="text-sm">Sin Stock</Badge>
+                          <Badge variant="destructive" className="text-sm">Sin Stock</Badge>
                         )}
                       </TableCell>
                       <TableCell className="text-center">
@@ -86,6 +86,7 @@ export const PurchaseFormProducts = () => {
                               variant="ghost"
                               size="icon"
                               className="h-6 w-6"
+                              disabled={getStockByBranch(product) <= 0}
                               onClick={() => removeUnitFromProduct(product?.id_product || "")}
                             >
                               <MinusCircle className="h-3 w-3" />
@@ -98,6 +99,7 @@ export const PurchaseFormProducts = () => {
                           variant="ghost"
                           size="icon"
                           className="h-6 w-6"
+                          disabled={getStockByBranch(product) <= 0}
                           onClick={() => addOrUpdateProduct(product?.id_product || "")}
                         >
                           <PlusCircle className="h-3 w-3 text-slate-600" />
@@ -112,25 +114,25 @@ export const PurchaseFormProducts = () => {
           </div>
         </div>
         <SelectedProdcutsCard />
-        </div>
-        <div className="flex items-center justify-end gap-2 mt-4">
-          <Button
-            variant="outline"
-            type="button"
-            className="mt-4"
-            onClick={closeModal}
-          >
-            Cancelar
-          </Button>
-          <Button
-            variant="default"
-            className="mt-4"
-            type="button"
-            disabled={selectedProducts.length === 0}
-            onClick={handleNext}
-          >
-            Siguiente
-          </Button>
+      </div>
+      <div className="flex items-center justify-end gap-2 mt-4">
+        <Button
+          variant="outline"
+          type="button"
+          className="mt-4"
+          onClick={closeModal}
+        >
+          Cancelar
+        </Button>
+        <Button
+          variant="default"
+          className="mt-4"
+          type="button"
+          disabled={selectedProducts.length === 0}
+          onClick={handleNext}
+        >
+          Siguiente
+        </Button>
       </div>
     </>
   )

@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pagination } from "@/features/customer/components/pagination"
 import { CustomerSheet } from "@/features/customer/components/customerSheet";
 
-
 const CustomerPage = () => {
   return (
     <Card>
