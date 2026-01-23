@@ -49,6 +49,7 @@ export const CustomerDialog = () => {
 
   const form = useForm<CustomerFormValue>({
     resolver: zodResolver(customerEschema),
+    mode: "onChange",
     defaultValues: {
       customer_document: "",
       document_type: "CC",
@@ -294,6 +295,11 @@ export const CustomerDialog = () => {
                     <Plus className="mr-2 h-4 w-4" />
                     Agregar Diagnóstico
                   </Button>
+                  {form.formState.errors.customer_diagnosis && (
+                    <p className="text-sm font-medium text-destructive">
+                      {form.formState.errors.customer_diagnosis.message}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="grid sm:grid-cols-3 gap-4">
@@ -390,7 +396,7 @@ export const CustomerDialog = () => {
                 )}
               />
               <DialogFooter>
-                <Button type="submit" disabled={isLoading}>
+                <Button type="submit" disabled={isLoading || !form.formState.isValid}>
                   {isLoading && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}

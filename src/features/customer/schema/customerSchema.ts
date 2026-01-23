@@ -49,7 +49,7 @@ export const customerEschema = z.object({
       .refine((email) => email.endsWith('.com'), {
         message: 'El correo debe terminar con .com',
       }),
-  customer_diagnosis: z.array(z.string()).min(1,{
+  customer_diagnosis: z.array(z.string().min(1, { message: 'Debe seleccionar un diagnóstico' })).min(1, {
     message: 'Al menos un diagnóstico es requerido',
   }),
   home_address:
