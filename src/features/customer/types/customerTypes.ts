@@ -75,7 +75,6 @@ export interface CustomerPurchase {
 
 
 export interface CustomerTableFilters {
-  document_type: string | null;
   customer_document: string | null;
   customer_name: string | null;
   customer_email: string | null;

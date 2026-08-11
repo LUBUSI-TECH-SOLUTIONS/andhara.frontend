@@ -1,13 +1,5 @@
 import { Customer, CustomerTableFilters } from "@/features/customer/types/customerTypes";
 
-export const filterByDocumentType = (customers: Customer[], documentType: string) =>
-  documentType.trim()
-    ? customers.filter(c =>
-      c.document_type
-        .toLowerCase()
-        .includes(documentType.toLowerCase())
-    ) : customers;
-
 export const filterByBranch = (
   customers: Customer[],
   branch: CustomerTableFilters["branch"]

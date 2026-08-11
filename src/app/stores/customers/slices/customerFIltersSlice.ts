@@ -3,7 +3,7 @@ import { StateCreator } from "zustand";
 import { CustomerCoreSlice } from "./customerCoreSlice";
 import { SortOption } from "@/lib/utils";
 import debounce from "lodash.debounce";
-import { filterByBranch, filterByDocumentType } from "@/app/stores/customers/utils/customerFilters";
+import { filterByBranch } from "@/app/stores/customers/utils/customerFilters";
 import { CustomerPaginationSlice } from "./customerPaginationSlice";
 import { CustomerActionsSlice } from "./customerActionsSlice";
 
@@ -25,7 +25,6 @@ export interface CustomerFiltersSlice extends CustomerFilters {
 }
 
 const initialFilters: CustomerTableFilters = {
-  document_type: null,
   customer_address: null,
   customer_document: null,
   customer_email: null,
@@ -91,7 +90,6 @@ export const createFilterSlice: StateCreator<
     } = get();
     let filtered = [...allCustomers];
 
-    filtered = filterByDocumentType(filtered, filters.document_type || "") || [];
     filtered = filterByBranch(filtered, filters.branch) || [];
 
     setFilteredCustomers(filtered);

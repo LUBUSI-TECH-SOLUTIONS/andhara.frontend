@@ -1,12 +1,11 @@
 import { useCustomerStore } from "@/app/stores/customers/customerStore"
 import React, { useEffect, useRef, useState } from "react"
-import { typesDocument } from "@/shared/static"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { branchesStatic } from "@/shared/static"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { FileStack, Search, Store } from "lucide-react"
+import { Search, Store } from "lucide-react"
 
 export const CustomersFilters = () => {
   const { filters, search, setFilters, setSearch, isLoading, clearFilters, fetchCustomers } = useCustomerStore()
@@ -82,25 +81,6 @@ export const CustomersFilters = () => {
               ))}
             </SelectContent>
           </Select>
-          <Select
-            value={filters.document_type?.toString() || "all"}
-            onValueChange={(value) => setFilters({document_type: value === "all" ? null : value})}
-          >
-            <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Selecciona un documento" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">
-                <FileStack className="-4 w-4" />
-                Todos los documentos
-                </SelectItem>
-              {
-                typesDocument.map((d) => (
-                  <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>
-                ))
-              }
-            </SelectContent>
-          </Select>
         </div>
       </div>
       <div className="flex flex-wrap gap-2">
@@ -108,7 +88,6 @@ export const CustomersFilters = () => {
           if(value === null) return null
           let label = ""
           if(key === "branch"){label = `Sede: ${value.branch_name}`}
-          if(key === "document_type"){label = `Tipo de documento: ${typesDocument.find(d => d.id === value)?.name}`}
 
           return(
             <Badge key={key} variant="secondary" className="flex items-center gap-1">
