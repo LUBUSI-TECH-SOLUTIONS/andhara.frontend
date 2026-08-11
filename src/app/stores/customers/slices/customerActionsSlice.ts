@@ -15,6 +15,7 @@ export interface CustomerActionsSlice {
       limit?: number;
       pageIndex?: number;
       pageSize?: number;
+      id_branch?: string | null;
     }) => Promise<void>;
   fetchCustomerByDocument: (document: string) => Promise<void>;
   fetchCustomerPurchases: (document: string) => Promise<void>;
@@ -44,6 +45,7 @@ export const createActionsSlice: StateCreator<
       applyPagination,
       setTotal,
       search,
+      filters,
       pageIndex,
       pageSize,
     } = get();
@@ -55,6 +57,10 @@ export const createActionsSlice: StateCreator<
           search: params?.search || search,
           skip: (params?.pageIndex || pageIndex) * (params?.pageSize || pageSize),
           limit: params?.pageSize || pageSize,
+          id_branch:
+            params?.id_branch !== undefined
+              ? params.id_branch
+              : filters.branch?.id_branch ?? null,
         }
       );
       setAllCustomers(data.data || []);

@@ -5,10 +5,18 @@ export const CustomerService = {
   getCustomers: async ({
     search = "",
     skip = 0,
-    limit = 100
+    limit = 100,
+    id_branch,
+  }: {
+    search?: string;
+    skip?: number;
+    limit?: number;
+    id_branch?: string | null;
   } = {}): Promise<ApiResponse<Customer[]>> => {
+    const params: Record<string, string | number> = { search, skip, limit };
+    if (id_branch) params.id_branch = id_branch;
     return await apiClient.get<Customer[]>("/v1/customer/customers", {
-      params: { search, skip, limit },
+      params,
     });
   },
 

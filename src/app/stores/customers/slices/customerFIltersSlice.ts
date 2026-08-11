@@ -5,6 +5,7 @@ import { SortOption } from "@/lib/utils";
 import debounce from "lodash.debounce";
 import { filterByBranch, filterByDocumentType } from "@/app/stores/customers/utils/customerFilters";
 import { CustomerPaginationSlice } from "./customerPaginationSlice";
+import { CustomerActionsSlice } from "./customerActionsSlice";
 
 export interface CustomerFilters {
   search: string;
@@ -39,9 +40,10 @@ const initialFilters: CustomerTableFilters = {
 }
 
 export const createFilterSlice: StateCreator<
-  CustomerFiltersSlice & 
-  CustomerCoreSlice & 
-  CustomerPaginationSlice,
+  CustomerFiltersSlice &
+  CustomerCoreSlice &
+  CustomerPaginationSlice &
+  CustomerActionsSlice,
   [],
   [],
   CustomerFiltersSlice
@@ -53,10 +55,20 @@ export const createFilterSlice: StateCreator<
 
   setSearch: (value) => set({ search: value }),
   setFilters: (newFilter) => {
-    const { filters, applyFilters } = get();
+    const { filters, applyFilters, setPageIndex, fetchCustomers } = get();
     const updatedFilters = { ...filters, ...newFilter };
 
     set({ filters: updatedFilters });
+
+    // La sede se filtra en el backend, así que al cambiarla hay que volver
+    // a consultar sobre todo el conjunto (no solo la página cargada) y
+    // reiniciar a la primera página.
+    if ("branch" in newFilter) {
+      setPageIndex(0);
+      fetchCustomers();
+      return;
+    }
+
     applyFilters();
   },
   setSearchWithDebounce: (search) => {
